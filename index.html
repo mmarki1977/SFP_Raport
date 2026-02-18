@@ -1,4 +1,226 @@
-test 18,02,2006
-v2
-v3\v4
-5
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAMÓWIENIA SFP</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        html { font-size: 120% !important;}
+        /* NAGŁÓWEK GŁÓWNY (Excel Style) - ZAWSZE WIDOCZNY */
+        #mainHeader th { background: #2c4d82; color: white; text-align: center; padding: 2px; font-size: 1.00rem; border: 1px solid #fff; }
+
+        /* WIERSZE GŁÓWNE */
+        .master-row td { border: 1px solid #ccc; padding: 12px 5px; text-align: center; font-size: 1.25rem; font-weight: bold; cursor: pointer; overflow: hidden; }         
+        .row-type-1 { background-color: #ffffff; }
+        .row-type-2 { background-color: #d9e1f2; }
+
+        /* KOLORY STATUSÓW */
+        .st-cell { color: white; text-transform: capitalize; }
+        .st-started  { background-color: #10ac5c !important; }
+        .st-released { background-color: #002060 !important; }
+        .st-prepared { background-color: #00b0f0 !important; }
+        .st-picking  { background-color: #555555  !important; color: white;}
+        .st-picked   { background-color: #555555  !important; color: #808080;}
+
+        /* SEKCJE ROZWIJANE */
+        .detail-row { display: none; background: #fff; }
+        /* .detail-cell { padding: 0 !important; border: 2px solid #333; } */
+        .detail-cell { padding: 0 !important; }
+
+        .extra-table, .inner-table { width: 100%; border-bottom: 1px solid #ccc; }
+        .extra-table th, .inner-table th { background: #2c4d82; color: white; text-align: center; padding: 2px; font-size: 0.90rem; border: 1px solid #fff; } 
+        .extra-table th:nth-child(1) { width: 10%; } 
+        .extra-table th:nth-child(2) { width: 13%; } 
+        .extra-table th:nth-child(3) { width: 13%; } 
+        .extra-table th:nth-child(4) { width: 23%; } 
+        .extra-table th:nth-child(5) { width: 8%; }
+        .extra-table th:nth-child(6) { width: 14%; } 
+        .extra-table th:nth-child(7) { width: 13%; } 
+        .extra-table th:nth-child(8) { width: 6%; }
+        .extra-table td, .inner-table td { border: 1px solid #ccc; padding: 2px 2px; text-align: center; font-size: 0.90rem; font-weight: normal; cursor: pointer; overflow: hidden; } 
+        .inner-table th:nth-child(1) { width: 10%; } 
+        .inner-table th:nth-child(2) { width: 38%; } 
+        .inner-table td:nth-child(2) {font-size: 0.7rem; }
+        .inner-table th:nth-child(3) { width: 9%; } 
+        .inner-table th:nth-child(4) { width: 17%; } 
+        .inner-table th:nth-child(5) { width: 13%; }
+        .inner-table td:nth-child(5) {font-size: 0.7rem; }
+        .inner-table th:nth-child(6) { width: 12%; } 
+        .scroll-wrapper { overflow-x: auto; width: 100%; }
+
+
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <table>
+        <thead id="mainHeader">
+            <tr>
+                <th style="width:9%">Time</th>
+                <th style="width:14%">Status</th>
+                <th style="width:19%">Center</th>
+                <th style="width:18%">Product</th>
+                <th style="width:8%">Qty</th>
+                <th style="width:32%">Location</th>
+            </tr>
+        </thead>
+        <tbody id="mainBody"></tbody>
+    </table>
+</div>
+
+<script>
+    const rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire
+Komerc;103391050;000103860;11.02.2026 02:11:41;22:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890054P2-550456533.B3GAB;3270;BrandC_SH41_L;P2-5504565;19.07.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890002P2-550910733.B3GAB;270;P2_F_035;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890014P2-550910733.B3GAB;270;P2_F_035;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890015P2-550910733.B3GAB;270;P2_E_007;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890016P2-550910733.B3GAB;270;P2_E_012;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000140001500018P2-550910733.B3GAB;270;P2_D_042;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890020P2-550910733.B3GAB;270;P2_D_054;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890021P2-550910733.B3GAB;270;P2_D_054;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890022P2-550910733.B3GAB;270;P2_F_023;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890023P2-550910733.B3GAB;270;P2_F_041;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890024P2-550910733.B3GAB;270;P2_F_011;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890025P2-550910733.B3GAB;270;P2_F_037;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890026P2-550910733.B3GAB;270;P2_F_041;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000125001340027P2-550910733.B3GAB;270;P2_D_014;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890028P2-550910733.B3GAB;270;P2_E_029;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890029P2-550910733.B3GAB;270;P2_E_029;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890030P2-550910733.B3GAB;270;BrandC_SH41_R;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890031P2-550910733.B3GAB;270;P2_F_047;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890032P2-550910733.B3GAB;270;P2_F_047;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890033P2-550910733.B3GAB;270;P2_F_037;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890034P2-550910733.B3GAB;270;P2_D_006;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890035P2-550910733.B3GAB;270;P2_D_014;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890036P2-550910733.B3GAB;270;P2_E_007;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000020000210037P2-550910733.B3GAB;270;P2_D_035;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890038P2-550910733.B3GAB;270;P2_D_035;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890039P2-550910733.B3GAB;270;P2_F_023;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890040P2-550910733.B3GAB;270;P2_F_031;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890041P2-550910733.B3GAB;270;P2_E_007;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890042P2-550910733.B3GAB;270;P2_F_009;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890043P2-550910733.B3GAB;270;P2_F_019;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000040000430044P2-550910733.B3GAB;270;P2_E_010;P2-5509107;01.08.2026
+Komerc;103391050;000103860;11.02.2026 02:11:41;0:18;Picking;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890045P2-550910733.B3GAB;270;P2_D_006;P2-5509107;01.08.2026
+Komerc;103391050;000103861;11.02.2026 02:11:41;0:18;New;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890046P2-550910733.B3GAB;270;P2_F_031;P2-5509107;01.08.2026
+Komerc;103391050;000103861;11.02.2026 02:11:41;0:18;New;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890047P2-550910733.B3GAB;270;P2_E_020;P2-5509107;01.08.2026
+Komerc;103391050;000103862;11.02.2026 02:11:41;0:18;Picked;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890048P2-550910733.B3GAB;270;P2_E_020;P2-5509107;01.08.2026
+Komerc;103391050;000103862;11.02.2026 02:11:41;0:18;Picked;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890049P2-550910733.B3GAB;270;P2_F_011;P2-5509107;01.08.2026
+Komerc;103391050;000103862;11.02.2026 02:11:41;0:18;Picked;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890050P2-550910733.B3GAB;270;P2_E_046;P2-5509107;01.08.2026
+Komerc;103391050;000103862;11.02.2026 02:11:41;0:18;Picked;Started;SH41-R;2669.9;TH;33.B3GA;6000270002890051P2-550910733.B3GAB;270;P2_F_009;P2-5509107;01.08.2026
+`;
+
+    let isFocused = false;
+
+    function getTimeStyle(timeStr) {
+        if (!timeStr || !timeStr.includes(':')) return { bg: '#fff', text: '#000' };
+        const parts = timeStr.split(':');
+        const total = (parseInt(parts[0]) * 60) + parseInt(parts[1]);
+        if (total < 15) return { bg: '#ffffff', text: '#000000' };
+        if (total <= 24) return { bg: '#ffff00', text: '#000000' };
+        if (total <= 240) return { bg: '#ff0000', text: '#ffffff' };
+        return { bg: '#000000', text: '#ffffff' };
+    }
+
+    function build() {
+        const lines = rawData.trim().split('\n');
+        const headers = lines[0].split(';');
+        const rows = lines.slice(1);
+        const body = document.getElementById('mainBody');
+
+        const mainIdx = [4, 6, 7, 10, 12, 13];
+        const extraIdx = [0, 1, 2, 3, 4, 5, 8, 9];
+        const detailIdx = [10, 11, 12, 13, 14, 15];
+
+        const groups = {};
+        rows.forEach(line => {
+            const cols = line.split(';');
+            const id = cols[2];
+            if (!groups[id]) groups[id] = [];
+            groups[id].push(cols);
+        });
+
+        Object.keys(groups).forEach((id, index) => {
+            const dataRows = groups[id];
+            const first = dataRows[0];
+            const tStyle = getTimeStyle(first[4]);
+            const rowClass = (index % 2 === 0) ? 'row-type-1' : 'row-type-2';
+
+            const masterTr = document.createElement('tr');
+            masterTr.className = `master-row ${rowClass}`;
+            masterTr.id = `master-${id}`;
+            masterTr.innerHTML = `
+                <td style="background:${tStyle.bg}; color:${tStyle.text}">${first[4]}</td>                
+               
+                <td class="st-cell st-${first[6].toLowerCase()}  ${first[5] !== 'New' ? 'st-picking' : ''}"> ${first[5] !== 'New' ? first[5] : first[6]}</td>
+                ${first[5] == 'Picking' ? `<td class="st-picking">${first[7]}</td><td class="st-picking">${first[10]}</td><td class="st-picking">${first[12]}</td><td class="st-picking">${first[13]}</td>` : ``} 
+                ${first[5] == 'Picked'  ? `<td class="st-picked">${first[7]}</td><td class="st-picked">${first[10]}</td><td class="st-picked">${first[12]}</td><td class="st-picked">${first[13]}</td>` : ``} 
+                ${first[5] == 'New'     ? `<td>${first[7]}</td><td>${first[10]}</td> <td>${first[12]}</td> <td>${first[13]}</td>` : ``} 
+                `;
+
+            const detailTr = document.createElement('tr');
+            detailTr.className = 'detail-row';
+            detailTr.id = `detail-${id}`;
+            
+            const extraHeader = extraIdx.map(i => `<th>${headers[i]}</th>`).join('');
+            const extraData = extraIdx.map(i => `<td>${first[i]}</td>`).join('');
+            const innerHeader = detailIdx.map(i => `<th>${headers[i]}</th>`).join('');
+            const innerRows = dataRows.map(r => `<tr>${detailIdx.map(i => `<td>${r[i]}</td>`).join('')}</tr>`).join('');
+
+            detailTr.innerHTML = `
+                <td colspan="6" class="detail-cell">
+                    <table class="extra-table"><thead><tr>${extraHeader}</tr></thead><tbody><tr>${extraData}</tr></tbody></table>
+                    <div class="scroll-wrapper">
+                        <table class="inner-table">
+                            <thead><tr>${innerHeader}</tr></thead>
+                            <tbody>${innerRows}</tbody>
+                        </table>
+                    </div>
+                </td>`;
+
+            masterTr.onclick = () => isFocused ? reset() : focusOrder(id);
+            body.appendChild(masterTr);
+            body.appendChild(detailTr);
+        });
+    }
+
+    function focusOrder(id) {
+        isFocused = true;
+        // Nagłówek (#mainHeader) pozostaje widoczny (nie zmieniamy display)
+        document.querySelectorAll('.master-row').forEach(r => r.style.display = 'none');
+        document.getElementById(`master-${id}`).style.display = 'table-row';
+        document.getElementById(`detail-${id}`).style.display = 'table-row';
+        window.scrollTo(0,0);
+    }
+
+    function reset() {
+        isFocused = false;
+        document.querySelectorAll('.master-row').forEach(r => r.style.display = 'table-row');
+        document.querySelectorAll('.detail-row').forEach(r => r.style.display = 'none');
+    }
+
+    window.onload = build;
+// *********************************** refresh
+   let lastInteractionTime = Date.now();
+
+    // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 15s
+    document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
+
+    // 2. Funkcja zarządzająca odświeżaniem
+    function manageRefresh() {
+        const now = Date.now();
+        const timeSinceInteraction = now - lastInteractionTime;        
+        if (typeof isFocused !== 'undefined' && isFocused === false) { location.reload();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
+        else if (timeSinceInteraction >= 120000) {   location.reload(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
+        else { setTimeout(manageRefresh, 5000); }
+    }
+    setTimeout(manageRefresh, 60000);                                                         // 3. Start sprawdzania po 60 sekundach od załadowania strony
+// **************************************** full screen
+        document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
+</script>
+</body>
+</html>
+
