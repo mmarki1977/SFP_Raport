@@ -2,7 +2,7 @@
   "name": "GXO SFP Raport",
   "short_name": "Raport",
   "start_url": "index.html",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
@@ -18,4 +18,5 @@
     }
   ]
 }
+
 
