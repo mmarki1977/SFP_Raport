@@ -85,29 +85,31 @@
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     
-  async function odswiezDane() {
+ async function fetchNewData() {
     try {
+        // Pobieramy tylko surowy tekst z pliku dane.txt
         const response = await fetch('dane.txt?t=' + Date.now());
         const text = await response.text();
 
         if (text && text !== rawData) {
             rawData = text;
-
-            // Znajdź swój kontener (podstaw poprawne ID)
-            const kontener = document.getElementById('container');
-            if (kontener) kontener.innerHTML = ""; 
-
-            // Uruchom swoją oryginalną logikę budowania tabeli
+            
+            // --- TUTAJ WSTAW NAZWĘ SWOJEJ FUNKCJI ---
+            // Tej, która parsuje rawData, grupuje i koloruje wiersze
             build(rawData); 
+            
+            console.log("Dane odświeżone pomyślnie.");
         }
-    } catch (e) { console.log("Błąd pobierania"); }
+    } catch (e) {
+        console.error("Błąd podczas pobierania pliku dane.txt");
+    }
 }
 
-// 2. URUCHOMIENIE (Nazwa musi pasować do tej u góry!)
-setInterval(odswiezDane, 10000); 
+// Sprawdzaj co 10 sekund
+setInterval(fetchNewData, 10000);
 
-// Opcjonalnie: wywołaj raz od razu po wejściu na stronę
-odswiezDane();
+// Pierwsze wywołanie przy starcie
+fetchNewData();
 
 
     let isFocused = false;
@@ -238,6 +240,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
