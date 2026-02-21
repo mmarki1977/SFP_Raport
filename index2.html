@@ -85,18 +85,22 @@
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     
-    async function updateDataFromGitHub() {
+    async function fetchNewData() {
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
-        const newText = await response.text();
-        
-        if (newText && newText !== rawData) {
-            rawData = newText;
-            build(rawData);
-            console.log("Dane zaktualizowane!");
+        const text = await response.text();
+
+        if (text && text !== rawData) {
+            rawData = text;
+
+       
+            const kontener = document.getElementById('container');  
+            if (kontener) kontener.innerHTML = ""; 
+            TwojaFunkcjaKtoraBudujeTabele(rawData);             
+            console.log("Odświeżono i wyczyszczono.");
         }
-    } catch (e) { console.error("Błąd aktualizacji danych"); }
-    }
+    } catch (e) { console.error("Błąd!"); }
+}
 
     // Uruchom sprawdzanie co 10 sekund
     setInterval(updateDataFromGitHub, 10000);
@@ -115,8 +119,6 @@
     }
 
     function build() {
-        const kontener = document.getElementById('container');
-        kontener.innerHTML = "";
         const lines = rawData.trim().split('\n');
         const headers = lines[0].split(';');
         const rows = lines.slice(1);
@@ -232,6 +234,4 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
-
-
 
