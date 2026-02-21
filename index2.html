@@ -192,22 +192,7 @@
     }
 
     window.onload = build;
-// *********************************** refresh
-   let lastInteractionTime = Date.now();
 
-    // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 15s
-    document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
-
-    // 2. Funkcja zarządzająca odświeżaniem
-    function manageRefresh() {
-        const now = Date.now();
-        const timeSinceInteraction = now - lastInteractionTime;        
-        if (typeof isFocused !== 'undefined' && isFocused === false) { location.reload();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
-        else if (timeSinceInteraction >= 120000) {   location.reload(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
-        else { setTimeout(manageRefresh, 5000); }
-    }
-    setTimeout(manageRefresh, 60000);                                                         // 3. Start sprawdzania po 60 sekundach od załadowania strony
-// **************************************** full screen
 // FULL SCREEN        document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
 function adjustFont(multiplier) {
@@ -245,4 +230,5 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
