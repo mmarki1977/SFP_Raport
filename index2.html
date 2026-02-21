@@ -85,24 +85,29 @@
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     
-    async function fetchNewData() {
+  async function odswiezDane() {
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
         const text = await response.text();
 
         if (text && text !== rawData) {
-           
-            rawData = text;       
-          //  const kontener = document.getElementById('container');  
-         //   if (kontener) kontener.innerHTML = ""; 
-            build();             
-            console.log("Odświeżono i wyczyszczono.");
+            rawData = text;
+
+            // Znajdź swój kontener (podstaw poprawne ID)
+            const kontener = document.getElementById('container');
+            if (kontener) kontener.innerHTML = ""; 
+
+            // Uruchom swoją oryginalną logikę budowania tabeli
+            build(rawData); 
         }
-    } catch (e) { console.error("Błąd!"); }
+    } catch (e) { console.log("Błąd pobierania"); }
 }
 
-    // Uruchom sprawdzanie co 10 sekund
-    setInterval(fetchNewData, 10000);
+// 2. URUCHOMIENIE (Nazwa musi pasować do tej u góry!)
+setInterval(odswiezDane, 10000); 
+
+// Opcjonalnie: wywołaj raz od razu po wejściu na stronę
+odswiezDane();
 
 
     let isFocused = false;
@@ -233,6 +238,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
