@@ -96,7 +96,7 @@
        
             const kontener = document.getElementById('container');  
             if (kontener) kontener.innerHTML = ""; 
-            TwojaFunkcjaKtoraBudujeTabele(rawData);             
+            build(rawData);             
             console.log("Odświeżono i wyczyszczono.");
         }
     } catch (e) { console.error("Błąd!"); }
@@ -234,4 +234,5 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
