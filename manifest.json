@@ -1,7 +1,7 @@
 {
-  "name": "Moja Aplikacja",
-  "short_name": "Aplikacja",
-  "start_url": "/index.html",
+  "name": "GXO SFP Raport",
+  "short_name": "Raport",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
@@ -18,3 +18,4 @@
     }
   ]
 }
+
