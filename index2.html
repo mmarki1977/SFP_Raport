@@ -87,8 +87,10 @@
     
  async function fetchNewData() {
     try {
+        const url = 'https://mmarki1977.github.io/SFP_Raport/dane.txt?t=' + Date.now();
+        const response = await fetch(url, { mode: 'cors' });
         // Pobieramy tylko surowy tekst z pliku dane.txt
-        const response = await fetch('dane.txt?t=' + Date.now());
+       // const response = await fetch('dane.txt?t=' + Date.now());
         const text = await response.text();
 
         if (text && text !== rawData) {
@@ -240,6 +242,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
