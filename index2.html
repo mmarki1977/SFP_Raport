@@ -115,6 +115,8 @@
     }
 
     function build() {
+        const kontener = document.getElementById('container');
+        kontener.innerHTML = "";
         const lines = rawData.trim().split('\n');
         const headers = lines[0].split(';');
         const rows = lines.slice(1);
@@ -230,5 +232,6 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
