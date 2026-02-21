@@ -8,6 +8,9 @@
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         /* html { font-size: 120% !important;} */
+
+
+
         /* NAGŁÓWEK GŁÓWNY (Excel Style) - ZAWSZE WIDOCZNY */
         #mainHeader th { background: #2c4d82; color: white; text-align: center; padding: 2px; font-size: 1.00rem; border: 1px solid #fff; }
 
@@ -60,21 +63,27 @@
         <thead id="mainHeader">
             <tr>
                 <th style="width:9%">Time</th>
-                <th style="width:14%">Status</th>
+                <th style="width:15%">Status</th>
                 <th style="width:19%">Center</th>
-                <th style="width:18%">Product</th>
-                <th style="width:8%">Qty</th>
-                <th style="width:32%">Location</th>
+                <th style="width:20%">Product</th>
+                <th style="width:9%">Qty</th>
+                <th style="width:28%">Location</th>
             </tr>
         </thead>
         <tbody id="mainBody"></tbody>
     </table>
 </div>
+
+
+
+
 <div class="font-controls" style="display: flex; gap: 10px; margin: 20px;"> 
 <button type="button" onclick="adjustFont(1.1)" style="padding: 10px 40px; font-size: 2rem; cursor: pointer; border-radius: 25px;">A+</button>
 <div style="text-align: center; width: 100%;"><span id="zegar-cyfrowy" style="font-size: 4em; font-weight: bold; display: inline-block;">00:00:00</span></div>
 <button type="button" onclick="adjustFont(0.9)" style="padding: 10px 40px; font-size: 2rem; cursor: pointer; border-radius: 25px;">A-</button>
 </div>
+
+
 <script>
     const rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire
 Komerc;103391019;000103825;10.02.2026 20:50:11;3:57;New;Started;A020;718.2;KG;V0Q8N;0V0Q8NL00001P2-5352697000421812251000110;100;P1_G_008_CF;P2-5352697;16.06.2026
@@ -392,13 +401,25 @@ Komerc;103405644;000103586;09.02.2026 21:34:25;27:13;New;Released;A020;200000;PC
 // **************************************** full screen
         document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
-// ****************************** TEST ZEGAR
 function adjustFont(multiplier) {
-    console.log("Funkcja adjustFont działa!"); // Sprawdzisz to w konsoli F12
-    const html = document.documentElement;
-    const currentSize = parseFloat(window.getComputedStyle(html).fontSize);
-    html.style.fontSize = (currentSize * multiplier) + "px";
-  }
+  const html = document.documentElement;
+  const currentSize = parseFloat(window.getComputedStyle(html).fontSize);
+  let newSize = currentSize * multiplier;
+  const MIN_SIZE = 6; // Minimalna czcionka (px)
+  const MAX_SIZE = 60; // Maksymalna czcionka (px)
+  if (newSize < MIN_SIZE) newSize = MIN_SIZE;
+  if (newSize > MAX_SIZE) newSize = MAX_SIZE;
+  const finalSizeStr = newSize + "px";  
+  html.style.fontSize = finalSizeStr;
+  localStorage.setItem("globalFontSize", finalSizeStr);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const savedSize = localStorage.getItem("globalFontSize");
+    if (savedSize) {document.documentElement.style.fontSize = savedSize;}
+});
+
+
 function aktualizujZegar() {
         const teraz = new Date();        
         // Pobieranie godzin, minut i sekund
@@ -412,7 +433,6 @@ function aktualizujZegar() {
     setInterval(aktualizujZegar, 1000);    
     // Start natychmiastowy
     aktualizujZegar();
-
 </script>
 </body>
 </html>
