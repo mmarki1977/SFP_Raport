@@ -399,6 +399,28 @@ Komerc;103390988;000105137;16.02.2026 21:53:48;21:05;New;Started;LU03;1500000;PC
     setTimeout(manageRefresh, 60000);                                                         // 3. Start sprawdzania po 60 sekundach od załadowania strony
 // **************************************** full screen
         document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
+
+// ****************************** TEST ZEGAR
+function adjustFont(multiplier) {
+    console.log("Funkcja adjustFont działa!"); // Sprawdzisz to w konsoli F12
+    const html = document.documentElement;
+    const currentSize = parseFloat(window.getComputedStyle(html).fontSize);
+    html.style.fontSize = (currentSize * multiplier) + "px";
+  }
+function aktualizujZegar() {
+        const teraz = new Date();        
+        // Pobieranie godzin, minut i sekund
+        let h = teraz.getHours().toString().padStart(2, '0');
+        let m = teraz.getMinutes().toString().padStart(2, '0');
+        let s = teraz.getSeconds().toString().padStart(2, '0');
+        // Składanie czasu w całość
+        document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
+    }
+    // Odświeżanie co 1 sekundę
+    setInterval(aktualizujZegar, 1000);    
+    // Start natychmiastowy
+    aktualizujZegar();
+
 </script>
 </body>
 </html>
