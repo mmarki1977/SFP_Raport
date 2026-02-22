@@ -97,15 +97,14 @@ async function odswiezDane() {
         const text = await response.text();
         
         // Sprawdzamy czy tekst nie jest pusty i czy się zmienił
-        if (text && text !== rawData) {
-            rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
+        if (text && text !== rawData) {        
             rawData = text;
             const kontener = document.getElementById('container');
             
-       //     if (kontener) {
+            if (kontener) {
                 // POPRAWKA: innerHTML zamiast container
-       //         kontener.innerHTML = ""; 
-       //     }
+                kontener.innerHTML = ""; 
+            }
  
             // Uruchomienie Twojej budowy tabeli
             build(rawData); 
@@ -254,6 +253,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
