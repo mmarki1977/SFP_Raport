@@ -89,7 +89,7 @@
 async function odswiezDane() {
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
-        
+        console.log("Pobrane dane:", response); // Zobaczysz to w F12
         if (!response.ok) {
             // To pokaże nam czy to błąd 404 (brak pliku) czy np. 403 (brak uprawnień)
             throw new Error("Kod błędu: " + response.status);
@@ -243,6 +243,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
