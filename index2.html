@@ -89,24 +89,34 @@
 async function odswiezDane() {
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
-        console.log("Pobrane dane:", response); // Zobaczysz to w F12
+        
         if (!response.ok) {
-            // To pokaże nam czy to błąd 404 (brak pliku) czy np. 403 (brak uprawnień)
             throw new Error("Kod błędu: " + response.status);
         }
 
         const text = await response.text();
+        
+        // Sprawdzamy czy tekst nie jest pusty i czy się zmienił
         if (text && text !== rawData) {
             rawData = text;
             const kontener = document.getElementById('container');
-            if (kontener) kontener.container = ""; 
+            
+            if (kontener) {
+                // POPRAWKA: innerHTML zamiast container
+                kontener.innerHTML = ""; 
+            }
+
+            // Uruchomienie Twojej budowy tabeli
             build(rawData); 
+            
+            document.getElementById('last-upd').innerText = "Zaktualizowano: " + new Date().toLocaleTimeString();
         }
     } catch (e) { 
-        // Wyświetli konkretny numer błędu na stronie
-        document.getElementById('last-upd').innerText = "Szczegóły błędu: " + e.message;
+        document.getElementById('last-upd').innerText = "Błąd: " + e.message;
+        console.error("Szczegóły błędu:", e);
     }
 }
+
 
 // Sprawdzaj co 10 sekund
 setInterval(odswiezDane, 10000);
@@ -243,6 +253,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
