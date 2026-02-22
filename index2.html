@@ -88,27 +88,16 @@
     
 async function odswiezDane() {
     try {
-        const response = await fetch('dane.txt?t=' + Date.now());
-        
-        if (!response.ok) {
-            throw new Error("Kod błędu: " + response.status);
-        }
-
+        const response = await fetch('dane.txt?t=' + Date.now());        
+        if (!response.ok) {throw new Error("Kod błędu: " + response.status); }
         const text = await response.text();
         
         // Sprawdzamy czy tekst nie jest pusty i czy się zmienił
         if (text && text !== rawData) {        
             rawData = text;
-            const kontener = document.getElementById('container');
-            
-            if (kontener) {
-                // POPRAWKA: innerHTML zamiast container
-                kontener.innerHTML = ""; 
-            }
- 
-            // Uruchomienie Twojej budowy tabeli
-            build(rawData); 
-            
+            const kontener = document.getElementById('container');            
+            // if (kontener) { kontener.innerHTML = ""; }             
+            build(rawData);             
             document.getElementById('last-upd').innerText = "Zaktualizowano: " + new Date().toLocaleTimeString();
         }
     } catch (e) { 
@@ -253,24 +242,3 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
