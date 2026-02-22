@@ -88,10 +88,13 @@
     
 async function odswiezDane() {
     try {
-        const body = document.getElementById('mainBody');
-        body.innerHTML = '';
+        
         const response = await fetch('dane.txt?t=' + Date.now());
         rawData = await response.text();
+
+        const body = document.getElementById('mainBody');
+        body.innerHTML = '';
+        
         build();
     } catch (e) { 
         document.getElementById('last-upd').innerText = "Błąd: " + e.message;
@@ -235,6 +238,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
