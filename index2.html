@@ -91,15 +91,26 @@ async function odswiezDane() {
         const response = await fetch('dane.txt?t=' + Date.now());        
         if (!response.ok) {throw new Error("Kod błędu: " + response.status); }
         const text = await response.text();
-        
-        // Sprawdzamy czy tekst nie jest pusty i czy się zmienił
-        if (text && text !== rawData) {        
+
+
+if (text && text !== rawData) {
             rawData = text;
             const kontener = document.getElementById('container');            
-            // if (kontener) { kontener.innerHTML = ""; }             
-            build(rawData);             
-            document.getElementById('last-upd').innerText = "Zaktualizowano: " + new Date().toLocaleTimeString();
+            if (kontener) {
+                // 1. Tworzymy tymczasowy, niewidoczny kontener
+                const tempDiv = document.createElement('div');
+                tempDiv.id = 'container'; // Nadajemy mu to samo ID, którego szuka build()                
+                // 2. Każemy funkcji build narysować tabelę w tym nowym worku
+                // Jeśli Twoja funkcja build() używa document.getElementById('container'),
+                // to musimy na chwilę podmienić stary kontener na nowy.                
+                kontener.innerHTML = ""; // Teraz czyścimy bezpiecznie
+                build(rawData); // Budujemy od nowa                
+                document.getElementById('last-upd').innerText = "Zaktualizowano: " + new Date().toLocaleTimeString();
+            }
         }
+
+       
+    
     } catch (e) { 
         document.getElementById('last-upd').innerText = "Błąd: " + e.message;
         console.error("Szczegóły błędu:", e);
@@ -242,3 +253,4 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
