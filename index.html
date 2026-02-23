@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.01</title>
+    <title>ZAMÓWIENIA SFP v2.02</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -83,7 +83,7 @@
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
 async function odswiezDane() {
-            playBeep(440, 200);        playBeep(220, 400);        playBeep(440, 200);
+            playBeep(440, 500);        playBeep(220, 800);        playBeep(440, 800);
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
         const fetchedText = await response.text();
@@ -96,7 +96,7 @@ async function odswiezDane() {
         }
     } catch (e) { }  }
 
-    // setInterval(odswiezDane, 10000);
+    setInterval(odswiezDane, 10000);
     odswiezDane();
 
     let isFocused = false;
@@ -232,13 +232,10 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;    
-        playBeep(880, 1200);
-        if (typeof isFocused !== 'undefined' && isFocused === false) {  odswiezDane();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
-        else if (timeSinceInteraction >= 30000) {  odswiezDane(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
-        else { setTimeout(manageRefresh, 5000); }
-        setTimeout(manageRefresh, 6000);    
+        playBeep(880, 2000);
+        if (timeSinceInteraction >= 30000) {  reset(); } 
     }
-    setTimeout(manageRefresh, 7000);                                                         // 3. Start sprawdzania po 10 sekundach od załadowania strony
+    setInterval(manageRefresh, 15000);                                                         // 3. Start sprawdzania po 5 sekundach od załadowania strony
     // **************************************** full screen
     document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
@@ -264,6 +261,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
