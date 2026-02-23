@@ -137,12 +137,6 @@ async function startSync() {
 startSync();
 
 
-
-    
-
-
-
-
     
     function getTimeStyle(timeStr) {
         if (!timeStr || !timeStr.includes(':')) return { bg: '#fff', text: '#000' };
@@ -266,7 +260,6 @@ function aktualizujZegar() {
     // Start natychmiastowy
     aktualizujZegar();
 
-
     // *********************************** refresh
    let lastInteractionTime = Date.now();
    let lastRowCount = 0;
@@ -303,24 +296,7 @@ function aktualizujZegar() {
     oscillator.stop(context.currentTime + duration / 1000);
     }
     // **************************************** beep
-
     
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
