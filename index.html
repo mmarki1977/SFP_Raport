@@ -104,12 +104,11 @@ async function odswiezDane() {
         }
     } catch (e) { }  }
 
-    // setInterval(odswiezDane, 10000);
-    // odswiezDane();
+    setInterval(odswiezDane, 20000);   // ******************************* OFF LINE
     setTimeout(odswiezDane, 1000);  
     let isFocused = false;
 
-
+/*
 async function startSync() {
     try {
         const safetyBuffer = 30000; // 30 sekund marginesu
@@ -144,7 +143,7 @@ async function startSync() {
     }
 }
 startSync();
-
+*/
 
     
     function getTimeStyle(timeStr) {
@@ -309,4 +308,5 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
