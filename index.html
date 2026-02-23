@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP - TABELA ZEWNĘTRZNA</title>
+    <title>ZAMÓWIENIA SFP v2</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         /* html { font-size: 120% !important;} */
-
-
 
         /* NAGŁÓWEK GŁÓWNY (Excel Style) - ZAWSZE WIDOCZNY */
         #mainHeader th { background: #2c4d82; color: white; text-align: center; padding: 2px; font-size: 1.00rem; border: 1px solid #fff; }
@@ -84,31 +82,21 @@
 
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
-    
-
-
-//let lastContent = ""; // Zmienna do kontroli zmian
-
 async function odswiezDane() {
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
         const fetchedText = await response.text();
 
-        // Sprawdź czy treść się zmieniła i nie jest pusta
-        //if (fetchedText && fetchedText !== lastContent) {
-        //    lastContent = fetchedText;
-          if (fetchedText && fetchedText !== rawData) {      
+        // Sprawdź czy treść się zmieniła i nie jest pusta       
+         if (fetchedText && fetchedText !== rawData) {      
             rawData = fetchedText; 
             const body = document.getElementById('mainBody');
             if (body) { body.innerHTML = ''; build(); }
         }
-    } catch (e) { }
-    }
+    } catch (e) { }  }
 
     setInterval(odswiezDane, 10000);
     odswiezDane();
-
-
 
     let isFocused = false;
 
@@ -235,7 +223,26 @@ function aktualizujZegar() {
     setInterval(aktualizujZegar, 1000);    
     // Start natychmiastowy
     aktualizujZegar();
+
+
+    // *********************************** refresh
+   let lastInteractionTime = Date.now();
+    // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 15s
+    document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
+    // 2. Funkcja zarządzająca odświeżaniem
+    function manageRefresh() {
+        const now = Date.now();
+        const timeSinceInteraction = now - lastInteractionTime;        
+        if (typeof isFocused !== 'undefined' && isFocused === false) { location.reload();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
+        else if (timeSinceInteraction >= 120000) {   location.reload(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
+        else { setTimeout(manageRefresh, 5000); }
+    }
+    setTimeout(manageRefresh, 60000);                                                         // 3. Start sprawdzania po 60 sekundach od załadowania strony
+// **************************************** full screen
+        document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
+
 </script>
 </body>
 </html>
+
 
