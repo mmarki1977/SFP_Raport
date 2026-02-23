@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.03</title>
+    <title>ZAMÓWIENIA SFP v2.04</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -227,11 +227,12 @@ function aktualizujZegar() {
     // *********************************** refresh
    let lastInteractionTime = Date.now();
     // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 15s
-    document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
+    // document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
+    document.addEventListener('click',  {     lastInteractionTime = Date.now();   });
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;    
-        playBeep(880, 200);
+       // playBeep(880, 200);
         if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 3000); }
         
     }
@@ -261,6 +262,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
