@@ -86,6 +86,15 @@ async function odswiezDane() {
         const response = await fetch('dane.txt?t=' + Date.now());
         const fetchedText = await response.text();
 
+
+        // *****************************************************************************
+        const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
+        const now = Date.now();               
+        console.log(`Czytam plik. Czas od zapisu pliku: ${Math.round((now - lastModified)/1000)}s`);
+        // *****************************************************************************
+
+
+        
         // Sprawdź czy treść się zmieniła i nie jest pusta       
          if (fetchedText && fetchedText !== rawData) { 
            // playBeep(440, 2000);
@@ -300,3 +309,4 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
