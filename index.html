@@ -228,14 +228,13 @@ function aktualizujZegar() {
    let lastInteractionTime = Date.now();
     // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 15s
     document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
-    // 2. Funkcja zarządzająca odświeżaniem
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;    
-        playBeep(880, 2000);
-        if (timeSinceInteraction >= 30000) {  reset(); } 
+        playBeep(880, 200);
+        if (timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 3000); } 
     }
-    setInterval(manageRefresh, 15000);                                                         // 3. Start sprawdzania po 5 sekundach od załadowania strony
+    setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
     document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
@@ -261,6 +260,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
