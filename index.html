@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2</title>
+    <title>ZAMÓWIENIA SFP v2.01</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -83,6 +83,7 @@
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
 async function odswiezDane() {
+            playBeep(440, 200);        playBeep(220, 400);        playBeep(440, 200);
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
         const fetchedText = await response.text();
@@ -216,7 +217,6 @@ function aktualizujZegar() {
         let s = teraz.getSeconds().toString().padStart(2, '0');
         // Składanie czasu w całość
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
-        playBeep(880, 100);
     }
     // Odświeżanie co 1 sekundę
     setInterval(aktualizujZegar, 1000);    
@@ -232,7 +232,7 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;    
-        playBeep();
+
         if (typeof isFocused !== 'undefined' && isFocused === false) {  odswiezDane();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
         else if (timeSinceInteraction >= 30000) {  odswiezDane(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
         else { setTimeout(manageRefresh, 5000); }
@@ -263,6 +263,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
