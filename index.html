@@ -117,7 +117,7 @@ async function startSync() {
         // (120s - (ile ms minęło od ostatniego zapisu))
         const timeSinceUpdate = (now - lastModified) % interval;
         const timeToWait = (interval - timeSinceUpdate) + safetyBuffer;
-
+        console.log('Czas od zapisu pliku: ${Math.round((now - lastModified)/1000)}s');
         console.log(`Zsynchronizowano. Pierwsze pobranie za: ${Math.round(timeToWait/1000)}s`);
 
         // 3. Oczekiwanie na pierwszy "właściwy" moment
@@ -310,6 +310,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
