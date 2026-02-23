@@ -95,7 +95,7 @@ async function odswiezDane() {
         }
     } catch (e) { }  }
 
-    setInterval(odswiezDane, 10000);
+    // setInterval(odswiezDane, 10000);
     odswiezDane();
 
     let isFocused = false;
@@ -189,8 +189,6 @@ async function odswiezDane() {
 
     window.onload = build;
 
-// FULL SCREEN        document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
-
 function adjustFont(multiplier) {
   const html = document.documentElement;
   const currentSize = parseFloat(window.getComputedStyle(html).fontSize);
@@ -233,16 +231,17 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;        
-        if (typeof isFocused !== 'undefined' && isFocused === false) { location.reload();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
-        else if (timeSinceInteraction >= 120000) {   location.reload(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
+        if (typeof isFocused !== 'undefined' && isFocused === false) {  odswiezDane();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
+        else if (timeSinceInteraction >= 30000) {  odswiezDane(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
         else { setTimeout(manageRefresh, 5000); }
     }
-    setTimeout(manageRefresh, 60000);                                                         // 3. Start sprawdzania po 60 sekundach od załadowania strony
-// **************************************** full screen
-        document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
+    setTimeout(manageRefresh, 10000);                                                         // 3. Start sprawdzania po 10 sekundach od załadowania strony
+    // **************************************** full screen
+    document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
 </script>
 </body>
 </html>
+
 
 
