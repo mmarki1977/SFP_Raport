@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.09</title>
+    <title>ZAMÓWIENIA SFP v2.10</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -234,9 +234,9 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;           
-        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 120000) {  reset(); playBeep(1600, 300); }        
+        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 120000) { reset(); }  
+        
         const currentRows = document.querySelectorAll('.extra-table tr').length;
-
     // Sprawdź, czy liczba wierszy się zwiększyła
     if (lastRowCount > 0 && currentRows > lastRowCount) { console.log("Dodano nowe wiersze!"); playBeep(660, 2000);   }
        lastRowCount = currentRows;        
@@ -266,6 +266,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
