@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.07</title>
+    <title>ZAMÓWIENIA SFP v2.08</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -83,13 +83,14 @@
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
 async function odswiezDane() {
-            playBeep(440, 500);        playBeep(220, 800);        playBeep(440, 800);
+          
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
         const fetchedText = await response.text();
 
         // Sprawdź czy treść się zmieniła i nie jest pusta       
-         if (fetchedText && fetchedText !== rawData) {      
+         if (fetchedText && fetchedText !== rawData) { 
+            playBeep(440, 2000);
             rawData = fetchedText; 
             const body = document.getElementById('mainBody');
             if (body) { body.innerHTML = ''; build(); }
@@ -232,10 +233,8 @@ function aktualizujZegar() {
     // document.addEventListener('click',  {     lastInteractionTime = Date.now();   });
     function manageRefresh() {
         const now = Date.now();
-        const timeSinceInteraction = now - lastInteractionTime;    
-       // playBeep(880, 200);
-        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 3000); }
-        
+        const timeSinceInteraction = now - lastInteractionTime;           
+        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 300); }        
     }
     setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
@@ -263,5 +262,6 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
