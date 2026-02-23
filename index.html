@@ -99,13 +99,13 @@ async function odswiezDane() {
 
     // setInterval(odswiezDane, 10000);
     // odswiezDane();
-    setTimeout(odswiezDane, 2000);  
+    setTimeout(odswiezDane, 1000);  
     let isFocused = false;
 
 
 async function startSync() {
     try {
-        const safetyBuffer = 20000; // 20 sekund marginesu
+        const safetyBuffer = 30000; // 30 sekund marginesu
         const interval = 120000;    // 120 sekund cyklu
 
         // 1. Jednorazowe pobranie metadanych pliku
@@ -310,6 +310,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
