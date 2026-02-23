@@ -230,7 +230,8 @@ function aktualizujZegar() {
     // 2. Funkcja zarządzająca odświeżaniem
     function manageRefresh() {
         const now = Date.now();
-        const timeSinceInteraction = now - lastInteractionTime;        
+        const timeSinceInteraction = now - lastInteractionTime;    
+        playBeep();
         if (typeof isFocused !== 'undefined' && isFocused === false) {  odswiezDane();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
         else if (timeSinceInteraction >= 30000) {  odswiezDane(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
         else { setTimeout(manageRefresh, 5000); }
@@ -239,9 +240,29 @@ function aktualizujZegar() {
     // **************************************** full screen
     document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
+    
+     // **************************************** beep
+    function playBeep(frequency = 440, duration = 200) {
+    const context = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+
+    oscillator.type = 'sine'; // Typ dźwięku: 'sine', 'square', 'sawtooth', 'triangle'
+    oscillator.frequency.value = frequency; // Częstotliwość w Hz (np. 440 to dźwięk A)    
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start();    
+    // Płynne wyciszenie, żeby uniknąć "trzeszczenia" na końcu
+    gain.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + duration / 1000);    
+    oscillator.stop(context.currentTime + duration / 1000);
+    }
+    // **************************************** beep
+
+    
 </script>
 </body>
 </html>
+
 
 
 
