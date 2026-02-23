@@ -96,7 +96,7 @@ async function odswiezDane() {
         }
     } catch (e) { }  }
 
-    setInterval(odswiezDane, 10000);
+    // setInterval(odswiezDane, 10000);
     odswiezDane();
 
     let isFocused = false;
@@ -232,12 +232,13 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;    
-
+        playBeep(880, 1200);
         if (typeof isFocused !== 'undefined' && isFocused === false) {  odswiezDane();  }  // SCENARIUSZ 1: Tabela zwinięta (isFocused === false) -> Odświeżamy natychmiast         
         else if (timeSinceInteraction >= 30000) {  odswiezDane(); }                      // SCENARIUSZ 2: Tabela rozwinięta (isFocused === true) -> Czekamy na 120s bezruchu       
         else { setTimeout(manageRefresh, 5000); }
+        setTimeout(manageRefresh, 6000);    
     }
-    setTimeout(manageRefresh, 10000);                                                         // 3. Start sprawdzania po 10 sekundach od załadowania strony
+    setTimeout(manageRefresh, 7000);                                                         // 3. Start sprawdzania po 10 sekundach od załadowania strony
     // **************************************** full screen
     document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
 
@@ -263,6 +264,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
