@@ -234,12 +234,11 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;           
-        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 300); }        
+        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 120000) {  reset(); playBeep(1600, 300); }        
     }
     setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
     document.addEventListener("click", function() { document.documentElement.requestFullscreen(); }, { once: true });
-
     
      // **************************************** beep
     function playBeep(frequency = 440, duration = 200) {
@@ -262,6 +261,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
