@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.12</title>
+    <title>ZAMÓWIENIA SFP v2.20</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -97,11 +97,55 @@ async function odswiezDane() {
         }
     } catch (e) { }  }
 
-    setInterval(odswiezDane, 10000);
+    // setInterval(odswiezDane, 10000);
     // odswiezDane();
     setTimeout(odswiezDane, 2000);  
     let isFocused = false;
 
+
+async function startSync() {
+    try {
+        const safetyBuffer = 10000; // 10 sekund marginesu
+        const interval = 120000;    // 120 sekund cyklu
+
+        // 1. Jednorazowe pobranie metadanych pliku
+        const response = await fetch('dane.txt', { method: 'HEAD', cache: 'no-cache' });
+        const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
+        const now = Date.now();
+
+        // 2. Obliczanie momentu, w którym nastąpi kolejny zapis
+        // (120s - (ile ms minęło od ostatniego zapisu))
+        const timeSinceUpdate = (now - lastModified) % interval;
+        const timeToWait = (interval - timeSinceUpdate) + safetyBuffer;
+
+        console.log(`Zsynchronizowano. Pierwsze pobranie za: ${Math.round(timeToWait/1000)}s`);
+
+        // 3. Oczekiwanie na pierwszy "właściwy" moment
+        setTimeout(() => {
+            odswiezDane(); // Pierwsze wywołanie po synchronizacji
+            
+            // 4. Uruchomienie stałego cyklu co 120s
+            setInterval(odswiezDane, interval);
+            
+            console.log("Uruchomiono stały cykl odświeżania co 120s.");
+        }, timeToWait);
+
+    } catch (error) {
+        console.error("Błąd wstępnej synchronizacji:", error);
+        // W razie błędu spróbuj ponownie za 5s
+        setTimeout(startSync, 10000);
+    }
+}
+startSync();
+
+
+
+    
+
+
+
+
+    
     function getTimeStyle(timeStr) {
         if (!timeStr || !timeStr.includes(':')) return { bg: '#fff', text: '#000' };
         const parts = timeStr.split(':');
@@ -266,6 +310,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
