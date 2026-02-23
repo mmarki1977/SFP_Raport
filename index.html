@@ -216,6 +216,7 @@ function aktualizujZegar() {
         let s = teraz.getSeconds().toString().padStart(2, '0');
         // Składanie czasu w całość
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
+        playBeep(880, 100);
     }
     // Odświeżanie co 1 sekundę
     setInterval(aktualizujZegar, 1000);    
@@ -262,6 +263,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
