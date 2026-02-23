@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.02</title>
+    <title>ZAMÓWIENIA SFP v2.03</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -232,7 +232,8 @@ function aktualizujZegar() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;    
         playBeep(880, 200);
-        if (timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 3000); } 
+        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 40000) {  reset(); playBeep(1600, 3000); }
+        
     }
     setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
@@ -260,6 +261,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
