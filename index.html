@@ -120,7 +120,7 @@
         const lines = rawData.trim().split('\n');
         const headers = lines[0].split(';');
         const rows = lines.slice(1);
-        const body = document.getElementById('mainBody');
+        const  = document.getElementById('main');
 
         const mainIdx = [4, 6, 7, 10, 12, 13];
         const extraIdx = [0, 1, 2, 3, 4, 5, 8, 9];
@@ -163,18 +163,18 @@
 
             detailTr.innerHTML = `
                 <td colspan="6" class="detail-cell">
-                    <table class="extra-table"><thead><tr>${extraHeader}</tr></thead><tbody><tr>${extraData}</tr></tbody></table>
+                    <table class="extra-table"><thead><tr>${extraHeader}</tr></thead><t><tr>${extraData}</tr></t></table>
                     <div class="scroll-wrapper">
                         <table class="inner-table">
                             <thead><tr>${innerHeader}</tr></thead>
-                            <tbody>${innerRows}</tbody>
+                            <t>${innerRows}</t>
                         </table>
                     </div>
                 </td>`;
 
             masterTr.onclick = () => isFocused ? reset() : focusOrder(id);
-            body.appendChild(masterTr);
-            body.appendChild(detailTr);
+            .appendChild(masterTr);
+            .appendChild(detailTr);
         });
     }
 
@@ -227,7 +227,11 @@ function aktualizujZegar() {
         const now = Date.now();   
         const aktualizacja =(now - lastModified)/1000;
      if (aktualizacja < 100)  {displayElement1.innerText = "Odczytane: " + Math.round(aktualizacja) + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
-     if (aktualizacja > 110)  {if (body) { body.innerHTML = ''; build(); }; displayElement1.innerText = "Dane nieaktualne. Tabela usunięta";} 
+     if (aktualizacja > 110)  {
+         const body = document.getElementById('mainBody');
+         if (body) { body.innerHTML = ''; build(); };
+         displayElement1.innerText = "Dane nieaktualne. Tabela usunięta";
+     } 
     
     }
     // Odświeżanie co 1 sekundę
@@ -274,6 +278,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
