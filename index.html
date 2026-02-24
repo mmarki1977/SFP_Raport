@@ -76,12 +76,19 @@
 <div style="text-align: center; width: 100%;"><span id="zegar-cyfrowy" style="font-size: 4em; font-weight: bold; display: inline-block;">00:00:00</span></div>
 <button type="button" onclick="adjustFont(1.1)" style="padding: 10px 40px; font-size: 2rem; cursor: pointer; border-radius: 25px;">A+</button>
 </div>
-
-
+    
+// ***************************** info test
+<div class="info1" style="display: flex; gap: 1px; margin: 2px;">
+<div style="text-align: center; width: 100%;"><span id="info6554" style="font-size: 1em; font-weight: bold; display: inline-block;">---</span></div>
+</div>
+Czas od zapisu pliku: <span id="display8887">???</span>
+// ***************************** info test
+    
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
-async function odswiezDane() {
-          
+    let isFocused = false;
+
+async function odswiezDane() {          
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
         const fetchedText = await response.text();
@@ -96,8 +103,7 @@ async function odswiezDane() {
 
         
         // Sprawdź czy treść się zmieniła i nie jest pusta       
-         if (fetchedText && fetchedText !== rawData) { 
-           // playBeep(440, 2000);
+         if (fetchedText && fetchedText !== rawData) {          
             rawData = fetchedText; 
             const body = document.getElementById('mainBody');
             if (body) { body.innerHTML = ''; build(); }
@@ -106,8 +112,7 @@ async function odswiezDane() {
 
     setInterval(odswiezDane, 20000);   // ******************************* OFF LINE
     setTimeout(odswiezDane, 1000);  
-    let isFocused = false;
-
+    
 /*
 async function startSync() {
     try {
@@ -262,6 +267,12 @@ function aktualizujZegar() {
         let s = teraz.getSeconds().toString().padStart(2, '0');
         // Składanie czasu w całość
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
+
+        const displayElement1 = document.getElementById('info6554');
+        displayElement1.innerText = (now - lastModified);
+        const displayElement2 = document.getElementById('display8887');
+        displayElement2.innerText = ${Math.round(timeToWait/1000)};
+    
     }
     // Odświeżanie co 1 sekundę
     setInterval(aktualizujZegar, 1000);    
@@ -271,18 +282,17 @@ function aktualizujZegar() {
     // *********************************** refresh
    let lastInteractionTime = Date.now();
    let lastRowCount = 0;
-    // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 15s
+    // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 60s
     // document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
-    document.addEventListener('click', function() {       lastInteractionTime = Date.now();    });
+    document.addEventListener('click', function() { lastInteractionTime = Date.now(); });
     function manageRefresh() {
         const now = Date.now();
         const timeSinceInteraction = now - lastInteractionTime;           
-        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 120000) { reset(); }  
+        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
         
         const currentRows = document.querySelectorAll('.master-row').length;
-    // Sprawdź, czy liczba wierszy się zwiększyła
-    if (lastRowCount > 0 && currentRows > lastRowCount) { playBeep(660, 2000);   }
-       lastRowCount = currentRows;        
+        if (lastRowCount > 0 && currentRows > lastRowCount) { playBeep(660, 2000); }
+        lastRowCount = currentRows;
     }
     setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
@@ -308,5 +318,6 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
