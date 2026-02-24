@@ -97,8 +97,18 @@
                 rawData = fetchedText; 
                 const body = document.getElementById('mainBody');
                 if (body) { body.innerHTML = ''; build(); }
+                
+                console.log("Wczytano dane");
+                const currentRows = document.querySelectorAll('.master-row').length;
+                if (currentRows > lastRowCount) { playBeep(660, 1000); console.log("Beeeepppp..........................:");}
+                lastRowCount = currentRows;
+
+                 
                 }
-                } catch (e) { }  }
+                } catch (e) { } 
+    
+       
+    }
 
     setInterval(odswiezDane, 20000);  
     setTimeout(odswiezDane, 1000);  
@@ -173,11 +183,6 @@
             body.appendChild(masterTr);
             body.appendChild(detailTr);
         });
-
-        console.log("Buduje tabele");
-        const currentRows = document.querySelectorAll('.master-row').length;
-        if (currentRows > lastRowCount) { playBeep(660, 1000); console.log("Beeeepppp..........................:");}
-        lastRowCount = currentRows;
     }
 
     function focusOrder(id) {
@@ -258,7 +263,8 @@ function aktualizujZegar() {
     function manageRefresh() {
         const now2 = Date.now();
         const timeSinceInteraction = now2 - lastInteractionTime;           
-        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
+        if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); } 
+
     }
     setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
@@ -284,6 +290,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
