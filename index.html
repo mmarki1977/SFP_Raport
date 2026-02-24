@@ -229,7 +229,8 @@ function aktualizujZegar() {
      if (aktualizacja < 100)  {displayElement1.innerText = "Odczytane: " + Math.round(aktualizacja) + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
      if (aktualizacja > 110)  {
          const body = document.getElementById('mainBody');
-         body.innerHTML = ''; 
+         body.innerHTML = '';
+         rawData = ` ; ;     ;   ; ; ; ;TABELA;   ; ;NIEAKTUALNA; ; ; ; ; `;
          build();
          displayElement1.innerText = "Dane nieaktualne. Tabela usunięta";
      } 
@@ -279,6 +280,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
