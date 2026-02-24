@@ -255,7 +255,7 @@ function aktualizujZegar() {
         
         const currentRows = document.querySelectorAll('.master-row').length;
         console.log("currentRows:", currentRows);
-        consolelog("lastRowCount:", lastRowCount);
+        console.log("lastRowCount:", lastRowCount);
         if (lastRowCount > 0 && currentRows > lastRowCount) { playBeep(660, 2000); }
         lastRowCount = currentRows;
     }
@@ -283,6 +283,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
