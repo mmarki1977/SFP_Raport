@@ -80,6 +80,8 @@
   
 
 Czas od zapisu pliku: <span id="display8887">----</span>
+Info2: <span id="display8888">----</span>
+Info3: <span id="display8889">----</span>
 
     
 <script>
@@ -266,10 +268,9 @@ function aktualizujZegar() {
         // Składanie czasu w całość
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
 
-        //const displayElement1 = document.getElementById('info6554');
-        //displayElement1.innerText = (now - lastModified);
-        const displayElement2 = document.getElementById('display8887');
-        displayElement2.innerText = Math.round((now - lastModified)/1000);
+       const displayElement1 = document.getElementById('display8887');
+       const now = Date.now();         
+       displayElement1.innerText = Math.round((now - lastModified)/1000);
     
     }
     // Odświeżanie co 1 sekundę
@@ -316,6 +317,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
