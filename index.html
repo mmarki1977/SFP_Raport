@@ -221,7 +221,7 @@ function aktualizujZegar() {
         const displayElement1 = document.getElementById('display8887');
         now = Date.now();   
         const aktualizacja = parseInt((now - lastModified)/1000);
-    console.error("aktualizacja:", aktualizacja);
+    console("aktualizacja:", aktualizacja);
      if (aktualizacja < 301)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
      if (aktualizacja > 300 && aktualizacja < 600 && aktualizacja % 60 === 0)  {
          playBeep(330, 1000);     
@@ -254,8 +254,8 @@ function aktualizujZegar() {
         if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
         
         const currentRows = document.querySelectorAll('.master-row').length;
-        console.error("currentRows:", currentRows);
-        console.error("lastRowCount:", lastRowCount);
+        console("currentRows:", currentRows);
+        console("lastRowCount:", lastRowCount);
         if (lastRowCount > 0 && currentRows > lastRowCount) { playBeep(660, 2000); }
         lastRowCount = currentRows;
     }
@@ -283,4 +283,5 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
