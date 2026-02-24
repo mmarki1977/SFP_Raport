@@ -269,7 +269,7 @@ function aktualizujZegar() {
         //const displayElement1 = document.getElementById('info6554');
         //displayElement1.innerText = (now - lastModified);
         const displayElement2 = document.getElementById('display8887');
-        displayElement2.innerText = ${Math.round((now - lastModified)/1000)};
+        displayElement2.innerText = Math.round((now - lastModified)/1000);
     
     }
     // Odświeżanie co 1 sekundę
@@ -316,6 +316,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
