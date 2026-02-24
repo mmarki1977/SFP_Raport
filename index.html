@@ -88,13 +88,6 @@
             const fetchedText = await response.text();
             lastModified = new Date(response.headers.get('Last-Modified')).getTime();
 
-        // *****************************************************************************
-         const now = Date.now();               
-        console.log(`Czytam plik. Czas od zapisu pliku: ${Math.round((now - lastModified)/1000)}s`);
-        // *****************************************************************************
-
-
-        
             // Sprawdź czy treść się zmieniła i nie jest pusta       
              if (fetchedText && fetchedText !== rawData) {          
                 rawData = fetchedText; 
@@ -103,7 +96,7 @@
                 }
                 } catch (e) { }  }
 
-    setInterval(odswiezDane, 20000);   // ******************************* OFF LINE
+    setInterval(odswiezDane, 20000);  
     setTimeout(odswiezDane, 1000);  
 
     function getTimeStyle(timeStr) {
@@ -226,13 +219,14 @@ function aktualizujZegar() {
         const displayElement1 = document.getElementById('display8887');
         const now = Date.now();   
         const aktualizacja =(now - lastModified)/1000;
-     if (aktualizacja < 100)  {displayElement1.innerText = "Odczytane: " + Math.round(aktualizacja) + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
-     if (aktualizacja > 110)  {
+     if (aktualizacja < 30)  {displayElement1.innerText = "Odczytane: " + Math.round(aktualizacja) + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
+     if (aktualizacja > 60 && aktualizacja % 10 === 0)  {
+         playBeep(660, 2000); 
          const body = document.getElementById('mainBody');
          body.innerHTML = '';
-         rawData = ` ; ;     ;   ; ; ; ;TABELA;   ; ;NIEAKTUALNA; ; ; ; ; `;
+         rawData = ``;
          build();
-         displayElement1.innerText = "Dane nieaktualne. Tabela usunięta";
+         displayElement1.innerText = "Dane nieaktualne. Tabela usunięta. Czekam na nowy raport";
      } 
     
     }
@@ -280,6 +274,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
