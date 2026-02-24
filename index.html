@@ -174,9 +174,9 @@
             body.appendChild(detailTr);
         });
 
-        console.log("Beeeepppp..........................:");
+        console.log("Buduje tabele");
         const currentRows = document.querySelectorAll('.master-row').length;
-        if (currentRows > lastRowCount) { playBeep(660, 1000); }
+        if (currentRows > lastRowCount) { playBeep(660, 1000); console.log("Beeeepppp..........................:");}
         lastRowCount = currentRows;
     }
 
@@ -284,6 +284,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
