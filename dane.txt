@@ -1,2 +1,2 @@
 Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire
-12:37:10
+12:39:10
