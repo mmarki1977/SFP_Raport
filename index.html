@@ -120,7 +120,7 @@
         const lines = rawData.trim().split('\n');
         const headers = lines[0].split(';');
         const rows = lines.slice(1);
-        const  = document.getElementById('main');
+        const body = document.getElementById('mainBody');
 
         const mainIdx = [4, 6, 7, 10, 12, 13];
         const extraIdx = [0, 1, 2, 3, 4, 5, 8, 9];
@@ -163,18 +163,18 @@
 
             detailTr.innerHTML = `
                 <td colspan="6" class="detail-cell">
-                    <table class="extra-table"><thead><tr>${extraHeader}</tr></thead><t><tr>${extraData}</tr></t></table>
+                    <table class="extra-table"><thead><tr>${extraHeader}</tr></thead><tbody><tr>${extraData}</tr></tbody></table>
                     <div class="scroll-wrapper">
                         <table class="inner-table">
                             <thead><tr>${innerHeader}</tr></thead>
-                            <t>${innerRows}</t>
+                            <tbody>${innerRows}</tbody>
                         </table>
                     </div>
                 </td>`;
 
             masterTr.onclick = () => isFocused ? reset() : focusOrder(id);
-            .appendChild(masterTr);
-            .appendChild(detailTr);
+            body.appendChild(masterTr);
+            body.appendChild(detailTr);
         });
     }
 
@@ -278,6 +278,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
