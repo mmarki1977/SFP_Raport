@@ -83,14 +83,16 @@
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     let isFocused = false;
     let lastModified = 0;
+    let now = Date.now();
     async function odswiezDane() {          
         try {
-            const response = await fetch('dane.txt?t=' + Date.now());
+            const response = await fetch('dane.txt?t=' + now);
             const fetchedText = await response.text();
             lastModified = new Date(response.headers.get('Last-Modified')).getTime();
-
+            const aktualizacja = parseInt((now - lastModified)/1000);
+            
             // Sprawdź czy treść się zmieniła i nie jest pusta       
-             if (fetchedText && fetchedText !== rawData) {          
+             if (fetchedText && fetchedText !== rawData && aktualizacja < 60 ) {          
                 rawData = fetchedText; 
                 const body = document.getElementById('mainBody');
                 if (body) { body.innerHTML = ''; build(); }
@@ -218,7 +220,7 @@ function aktualizujZegar() {
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
 
         const displayElement1 = document.getElementById('display8887');
-        const now = Date.now();   
+        now = Date.now();   
         const aktualizacja = parseInt((now - lastModified)/1000);
     console.error("aktualizacja:", aktualizacja);
      if (aktualizacja < 30)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
@@ -248,8 +250,8 @@ function aktualizujZegar() {
     // document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
     document.addEventListener('click', function() { lastInteractionTime = Date.now(); });
     function manageRefresh() {
-        const now = Date.now();
-        const timeSinceInteraction = now - lastInteractionTime;           
+        const now2 = Date.now();
+        const timeSinceInteraction = now2 - lastInteractionTime;           
         if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
         
         const currentRows = document.querySelectorAll('.master-row').length;
@@ -280,6 +282,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
