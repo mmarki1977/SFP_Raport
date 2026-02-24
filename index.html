@@ -74,8 +74,8 @@
 <div style="text-align: center; width: 100%;"><span id="zegar-cyfrowy" style="font-size: 4em; font-weight: bold; display: inline-block;">--:--:--</span><br><span id="display8887">----</span></div>
 
 <div class="font-controls" style="display: flex; gap:5px; margin: 5px;"> 
-<button type="button" onclick="adjustFont(0.9)" style="padding: 10px 10px; font-size: 1rem; cursor: pointer; border-radius: 5px;">A-</button>        
-<button type="button" onclick="adjustFont(1.1)" style="padding: 10px 10px; font-size: 1rem; cursor: pointer; border-radius: 5px;">A+</button>
+<button type="button" onclick="adjustFont(0.9)" style="padding: 5px 5px; font-size: 1rem; cursor: pointer; border-radius: 5px;">A-</button>        
+<button type="button" onclick="adjustFont(1.1)" style="padding: 5px 5px; font-size: 1rem; cursor: pointer; border-radius: 5px;">A+</button>
 </div>
     
   
@@ -85,70 +85,30 @@
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     let isFocused = false;
     let lastModified = 0;
-async function odswiezDane() {          
-    try {
-        const response = await fetch('dane.txt?t=' + Date.now());
-        const fetchedText = await response.text();
-
+    async function odswiezDane() {          
+        try {
+            const response = await fetch('dane.txt?t=' + Date.now());
+            const fetchedText = await response.text();
+            lastModified = new Date(response.headers.get('Last-Modified')).getTime();
 
         // *****************************************************************************
-        // const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
-        lastModified = new Date(response.headers.get('Last-Modified')).getTime();
-        const now = Date.now();               
+         const now = Date.now();               
         console.log(`Czytam plik. Czas od zapisu pliku: ${Math.round((now - lastModified)/1000)}s`);
         // *****************************************************************************
 
 
         
-        // Sprawdź czy treść się zmieniła i nie jest pusta       
-         if (fetchedText && fetchedText !== rawData) {          
-            rawData = fetchedText; 
-            const body = document.getElementById('mainBody');
-            if (body) { body.innerHTML = ''; build(); }
-        }
-    } catch (e) { }  }
+            // Sprawdź czy treść się zmieniła i nie jest pusta       
+             if (fetchedText && fetchedText !== rawData) {          
+                rawData = fetchedText; 
+                const body = document.getElementById('mainBody');
+                if (body) { body.innerHTML = ''; build(); }
+                }
+                } catch (e) { }  }
 
     setInterval(odswiezDane, 20000);   // ******************************* OFF LINE
     setTimeout(odswiezDane, 1000);  
-    
-/*
-async function startSync() {
-    try {
-        const safetyBuffer = 30000; // 30 sekund marginesu
-        const interval = 120000;    // 120 sekund cyklu
 
-        // 1. Jednorazowe pobranie metadanych pliku
-        const response = await fetch('dane.txt', { method: 'HEAD', cache: 'no-cache' });
-        const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
-        const now = Date.now();
-
-        // 2. Obliczanie momentu, w którym nastąpi kolejny zapis
-        // (120s - (ile ms minęło od ostatniego zapisu))
-        const timeSinceUpdate = (now - lastModified) % interval;
-        const timeToWait = (interval - timeSinceUpdate) + safetyBuffer;
-        console.log(`Czas od zapisu pliku: ${Math.round((now - lastModified)/1000)}s`);
-        console.log(`Zsynchronizowano. Pierwsze pobranie za: ${Math.round(timeToWait/1000)}s`);
-
-        // 3. Oczekiwanie na pierwszy "właściwy" moment
-        setTimeout(() => {
-            odswiezDane(); // Pierwsze wywołanie po synchronizacji
-            
-            // 4. Uruchomienie stałego cyklu co 120s
-            setInterval(odswiezDane, interval);
-            
-            console.log("Uruchomiono stały cykl odświeżania co 120s.");
-        }, timeToWait);
-
-    } catch (error) {
-        console.error("Błąd wstępnej synchronizacji:", error);
-        // W razie błędu spróbuj ponownie za 5s
-        setTimeout(startSync, 10000);
-    }
-}
-startSync();
-*/
-
-    
     function getTimeStyle(timeStr) {
         if (!timeStr || !timeStr.includes(':')) return { bg: '#fff', text: '#000' };
         const parts = timeStr.split(':');
@@ -270,6 +230,7 @@ function aktualizujZegar() {
         const now = Date.now();   
         const aktualizacja =(now - lastModified)/1000;
      if (aktualizacja < 100)  {displayElement1.innerText = "Odczytane: " + Math.round(aktualizacja) + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
+     if (aktualizacja > 110)  {body.innerHTML = ''; build(); displayElement1.innerText = "Dane nieaktualne. Tabela usunięta";} 
     
     }
     // Odświeżanie co 1 sekundę
@@ -316,6 +277,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
