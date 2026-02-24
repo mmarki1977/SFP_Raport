@@ -226,6 +226,7 @@ function aktualizujZegar() {
      if (aktualizacja > 300 && aktualizacja < 600 && aktualizacja % 60 === 0)  {
          playBeep(330, 1000);     
          displayElement1.innerText = "Dane nieaktualne";
+         console.log("aktualizacja 300 - 600:", aktualizacja);
      } 
      if (aktualizacja > 599 && aktualizacja % 60 === 0)  {
          playBeep(660, 2000); 
@@ -234,6 +235,7 @@ function aktualizujZegar() {
          rawData = ``;
          build();
          displayElement1.innerText = "Dane nieaktualne. Tabela usunięta. Czekam na nowy raport";
+         console.log("aktualizacja 600+:", aktualizacja);
      } 
     
     }
@@ -254,9 +256,7 @@ function aktualizujZegar() {
         if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
         
         const currentRows = document.querySelectorAll('.master-row').length;
-        console.log("currentRows:", currentRows);
-        console.log("lastRowCount:", lastRowCount);
-        if (currentRows > lastRowCount) { playBeep(660, 2000); console.log("Beeeepppppp...................."); }
+        if (currentRows > lastRowCount) { playBeep(660, 1000); }
         lastRowCount = currentRows;
     }
     setInterval(manageRefresh, 2000);                                             
@@ -283,6 +283,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
