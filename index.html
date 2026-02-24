@@ -90,27 +90,17 @@
             const response = await fetch('dane.txt?t=' + now);
             const fetchedText = await response.text();
             lastModified = new Date(response.headers.get('Last-Modified')).getTime();
-            const aktualizacja = parseInt((now - lastModified)/1000);
-            console.log("Sprawdzam czy są dane");
+            const aktualizacja = parseInt((now - lastModified)/1000);           
             // Sprawdź czy treść się zmieniła i nie jest pusta       
              if (fetchedText && fetchedText !== rawData && aktualizacja < 600 ) {          
-                rawData = fetchedText; 
-                console.log("Są dane.....");
+                rawData = fetchedText;                 
                 const body = document.getElementById('mainBody');
                 if (body) { body.innerHTML = ''; build(); }
-                
-                console.log("Wczytano dane");
-                const currentRows = document.querySelectorAll('.master-row').length;
-                console.log("currentRows",currentRows);
-                console.log("lastRowCount",lastRowCount);
-                if (currentRows > lastRowCount) { playBeep(660, 1000); console.log("Beeeepppp..........................:");}
-                lastRowCount = currentRows;
-
-                 
+                const currentRows = document.querySelectorAll('.master-row').length;               
+                if (currentRows > lastRowCount) { playBeep(660, 1000); }
+                lastRowCount = currentRows;                 
                 }
-                } catch (e) { } 
-    
-       
+                } catch (e) { console.log("Blad !!!"}   
     }
 
     setInterval(odswiezDane, 20000);  
@@ -293,16 +283,3 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
