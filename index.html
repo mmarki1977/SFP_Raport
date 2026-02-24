@@ -254,6 +254,8 @@ function aktualizujZegar() {
         if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
         
         const currentRows = document.querySelectorAll('.master-row').length;
+        console.error("currentRows:", currentRows);
+        console.error("lastRowCount:", lastRowCount);
         if (lastRowCount > 0 && currentRows > lastRowCount) { playBeep(660, 2000); }
         lastRowCount = currentRows;
     }
@@ -281,3 +283,4 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
