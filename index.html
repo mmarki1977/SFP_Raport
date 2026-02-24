@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
     <link rel="icon" href="data:,">
-    <title>ZAMÓWIENIA SFP v2.21</title>
+    <title>ZAMÓWIENIA SFP v2.23</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -83,6 +83,7 @@
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     let isFocused = false;
     let lastModified = 0;
+    let lastRowCount = 0;
     let now = Date.now();
     async function odswiezDane() {          
         try {
@@ -172,6 +173,11 @@
             body.appendChild(masterTr);
             body.appendChild(detailTr);
         });
+
+        console.log("Beeeepppp..........................:", aktualizacja);
+        const currentRows = document.querySelectorAll('.master-row').length;
+        if (currentRows > lastRowCount) { playBeep(660, 1000); }
+        lastRowCount = currentRows;
     }
 
     function focusOrder(id) {
@@ -221,21 +227,20 @@ function aktualizujZegar() {
         const displayElement1 = document.getElementById('display8887');
         now = Date.now();   
         const aktualizacja = parseInt((now - lastModified)/1000);
-    console.log("aktualizacja:", aktualizacja);
      if (aktualizacja < 301)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
      if (aktualizacja > 300 && aktualizacja < 600 && aktualizacja % 60 === 0)  {
          playBeep(330, 1000);     
          displayElement1.innerText = "Dane nieaktualne";
-         console.log("aktualizacja 300 - 600:", aktualizacja);
+         console.log("Dane nieaktualne. Aktualizacja 300 - 600:", aktualizacja);
      } 
-     if (aktualizacja > 599 && aktualizacja % 60 === 0)  {
+     if (aktualizacja > 599 && aktualizacja % 120 === 0)  {
          playBeep(660, 2000); 
          const body = document.getElementById('mainBody');
          body.innerHTML = '';
          rawData = ``;
          build();
          displayElement1.innerText = "Dane nieaktualne. Tabela usunięta. Czekam na nowy raport";
-         console.log("aktualizacja 600+:", aktualizacja);
+         console.log("Dane nieaktualne. Aktualizacja 600+:", aktualizacja);
      } 
     
     }
@@ -246,7 +251,7 @@ function aktualizujZegar() {
 
     // *********************************** refresh
    let lastInteractionTime = Date.now();
-   let lastRowCount = 0;
+
     // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 60s
     // document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
     document.addEventListener('click', function() { lastInteractionTime = Date.now(); });
@@ -254,10 +259,6 @@ function aktualizujZegar() {
         const now2 = Date.now();
         const timeSinceInteraction = now2 - lastInteractionTime;           
         if (typeof isFocused !== 'undefined' && isFocused === true && timeSinceInteraction >= 60000) { reset(); }  
-        
-        const currentRows = document.querySelectorAll('.master-row').length;
-        if (currentRows > lastRowCount) { playBeep(660, 1000); }
-        lastRowCount = currentRows;
     }
     setInterval(manageRefresh, 2000);                                             
     // **************************************** full screen
@@ -283,6 +284,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
