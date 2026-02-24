@@ -92,7 +92,7 @@
             const aktualizacja = parseInt((now - lastModified)/1000);
             
             // Sprawdź czy treść się zmieniła i nie jest pusta       
-             if (fetchedText && fetchedText !== rawData && aktualizacja < 60 ) {          
+             if (fetchedText && fetchedText !== rawData && aktualizacja < 600 ) {          
                 rawData = fetchedText; 
                 const body = document.getElementById('mainBody');
                 if (body) { body.innerHTML = ''; build(); }
@@ -209,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (savedSize) {document.documentElement.style.fontSize = savedSize;}
 });
 
-
 function aktualizujZegar() {
         const teraz = new Date();        
         // Pobieranie godzin, minut i sekund
@@ -223,12 +222,12 @@ function aktualizujZegar() {
         now = Date.now();   
         const aktualizacja = parseInt((now - lastModified)/1000);
     console.error("aktualizacja:", aktualizacja);
-     if (aktualizacja < 30)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
-     if (aktualizacja > 29 && aktualizacja < 61 && aktualizacja % 5 === 0)  {
+     if (aktualizacja < 301)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
+     if (aktualizacja > 300 && aktualizacja < 600 && aktualizacja % 60 === 0)  {
          playBeep(330, 1000);     
          displayElement1.innerText = "Dane nieaktualne";
      } 
-     if (aktualizacja > 60 && aktualizacja % 10 === 0)  {
+     if (aktualizacja > 599 && aktualizacja % 60 === 0)  {
          playBeep(660, 2000); 
          const body = document.getElementById('mainBody');
          body.innerHTML = '';
@@ -282,33 +281,3 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
