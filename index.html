@@ -235,8 +235,8 @@ function aktualizujZegar() {
         const displayElement1 = document.getElementById('display8887');
         now = Date.now();   
         const aktualizacja = parseInt((now - lastModified)/1000);
-     if (aktualizacja < 301)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
-     if (aktualizacja > 300 && aktualizacja < 600 && aktualizacja % 60 === 0)  {
+     if (aktualizacja < 300)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
+     if (aktualizacja > 299 && aktualizacja < 600 && aktualizacja % 60 === 0)  {
          playBeep(330, 1000);     
          displayElement1.innerText = "Dane nieaktualne";
          console.log("Dane nieaktualne. Aktualizacja 300 - 600:", aktualizacja);
@@ -293,6 +293,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
