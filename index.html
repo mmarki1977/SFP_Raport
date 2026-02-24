@@ -100,6 +100,8 @@
                 
                 console.log("Wczytano dane");
                 const currentRows = document.querySelectorAll('.master-row').length;
+                console.log("currentRows",currentRows);
+                console.log("lastRowCount",lastRowCount);
                 if (currentRows > lastRowCount) { playBeep(660, 1000); console.log("Beeeepppp..........................:");}
                 lastRowCount = currentRows;
 
@@ -290,6 +292,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
