@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
-    <title>ZAMÓWIENIA SFP v2.20</title>
+    <title>ZAMÓWIENIA SFP v2.21</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -78,10 +78,10 @@
 </div>
     
 // ***************************** info test
-<div class="info1" style="display: flex; gap: 1px; margin: 2px;">
-<div style="text-align: center; width: 100%;"><span id="info6554" style="font-size: 1em; font-weight: bold; display: inline-block;">---</span></div>
-</div>
-Czas od zapisu pliku: <span id="display8887">???</span>
+//<div class="info1" style="display: flex; gap: 1px; margin: 2px;">
+//<div style="text-align: center; width: 100%;"><span id="info6554" style="font-size: 1em; font-weight: bold; display: inline-block;">---</span></div>
+//</div>
+Czas od zapisu pliku: <span id="display8887">----</span>
 // ***************************** info test
     
 <script>
@@ -268,10 +268,10 @@ function aktualizujZegar() {
         // Składanie czasu w całość
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
 
-        const displayElement1 = document.getElementById('info6554');
-        displayElement1.innerText = (now - lastModified);
+        //const displayElement1 = document.getElementById('info6554');
+        //displayElement1.innerText = (now - lastModified);
         const displayElement2 = document.getElementById('display8887');
-        displayElement2.innerText = ${Math.round(timeToWait/1000)};
+        displayElement2.innerText = ${Math.round((now - lastModified)/1000)};
     
     }
     // Odświeżanie co 1 sekundę
@@ -318,6 +318,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
