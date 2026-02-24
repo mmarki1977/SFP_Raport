@@ -79,15 +79,15 @@
     
   
 
-Czas od zapisu pliku: <span id="display8887">----</span>
-Info2: <span id="display8888">----</span>
-Info3: <span id="display8889">----</span>
+Czas od zapisu pliku: <span id="display8887">----</span><br>
+Info2: <span id="display8888">----</span><br>
+Info3: <span id="display8889">----</span><br>
 
     
 <script>
     let rawData = `Zlecenie;RelatedPO;R Order No;Start Date;Time;Status;POStatus;Center;Target Qty.;UOM;Product;Container;Quant;Location;LotNo;Expire`;
     let isFocused = false;
-
+    let lastModified = 0;
 async function odswiezDane() {          
     try {
         const response = await fetch('dane.txt?t=' + Date.now());
@@ -95,7 +95,8 @@ async function odswiezDane() {
 
 
         // *****************************************************************************
-        const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
+        // const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
+        lastModified = new Date(response.headers.get('Last-Modified')).getTime();
         const now = Date.now();               
         console.log(`Czytam plik. Czas od zapisu pliku: ${Math.round((now - lastModified)/1000)}s`);
         // *****************************************************************************
@@ -317,6 +318,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
