@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="/SFP_Raport/manifest.json">
+    <link rel="icon" href="data:,">
     <title>ZAMÓWIENIA SFP v2.21</title>
     <style>
         body { font-family: sans-serif; margin: 0; padding: 5px; background: #fff; }
@@ -218,8 +219,8 @@ function aktualizujZegar() {
 
         const displayElement1 = document.getElementById('display8887');
         const now = Date.now();   
-        const aktualizacja =(now - lastModified)/1000;
-     if (aktualizacja < 30)  {displayElement1.innerText = "Odczytane: " + Math.round(aktualizacja) + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
+        const aktualizacja = parseInt(now - lastModified)/1000;
+     if (aktualizacja < 30)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} else  {displayElement1.innerText = "Dane nieaktualne";}
      if (aktualizacja > 60 && aktualizacja % 10 === 0)  {
          playBeep(660, 2000); 
          const body = document.getElementById('mainBody');
@@ -274,6 +275,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
