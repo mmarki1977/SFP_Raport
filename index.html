@@ -265,9 +265,10 @@ function aktualizujZegar() {
         // Składanie czasu w całość
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
 
-       const displayElement1 = document.getElementById('display8887');
-       const now = Date.now();         
-       displayElement1.innerText = Math.round((now - lastModified)/1000);
+        const displayElement1 = document.getElementById('display8887');
+        const now = Date.now();   
+        const aktualizacja =(now - lastModified)/1000;
+     if (aktualizacja > 60)  {displayElement1.innerText = Math.round(aktualizacja);} else  {displayElement1.innerText = "BRAK - dane nieaktualne";}
     
     }
     // Odświeżanie co 1 sekundę
@@ -314,6 +315,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
