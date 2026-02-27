@@ -72,7 +72,7 @@
     </table>
 </div>
 
-<div style="text-align: center; width: 100%;"><span id="zegar-cyfrowy" style="font-size: 4em; font-weight: bold; display: inline-block;">--:--:--</span><br><span id="display8887">----</span></div>
+<div style="text-align: center; width: 100%;"><span id="zegar-cyfrowy" style="font-size: 4em; font-weight: bold; display: inline-block;">--:--:--</span><br><span id="display8887">----</span><br><span id="display8889"></span></div>
 
 <div class="font-controls" style="display: flex; gap:5px; margin: 5px;"> 
 <button type="button" onclick="adjustFont(0.9)" style="padding: 5px 5px; font-size: 1rem; cursor: pointer; border-radius: 5px;">A-</button>        
@@ -85,6 +85,8 @@
     let lastModified = 0;
     let lastRowCount = 0;
     let now = Date.now();
+    let lastInteractionTime = Date.now();
+    
     async function odswiezDane() {          
         try {
             const response = await fetch('dane.txt?t=' + now);
@@ -223,6 +225,7 @@ function aktualizujZegar() {
         document.getElementById('zegar-cyfrowy').innerHTML = h + ":" + m + ":" + s;
 
         const displayElement1 = document.getElementById('display8887');
+        const displayElement2 = document.getElementById('display8889');
         now = Date.now();   
         const aktualizacja = parseInt((now - lastModified)/1000);
      if (aktualizacja < 300)  {displayElement1.innerText = "Odczytane: " + aktualizacja + " s";} 
@@ -231,6 +234,7 @@ function aktualizujZegar() {
          displayElement1.innerText = "Dane nieaktualne";
          console.log("Dane nieaktualne. Aktualizacja 300 - 600:", aktualizacja);
      } 
+     if ((lastInteractionTime - now) > 30)  {displayElement2.innerText = "Czas bezczynnosci: " + (lastInteractionTime - now) + " s";} 
      if (aktualizacja > 599 && aktualizacja % 120 === 0)  {
          playBeep(660, 2000); 
          const body = document.getElementById('mainBody');
@@ -248,7 +252,7 @@ function aktualizujZegar() {
     // aktualizujZegar();
 
     // *********************************** refresh
-   let lastInteractionTime = Date.now();
+  
 
     // 1. Rejestrujemy każde kliknięcie w tabelę, aby zresetować licznik 60s
     // document.addEventListener('click', function(e) {   if (e.target.closest('.extra-table, .inner-table, .detail-row')) {    lastInteractionTime = Date.now();   }  });
@@ -283,4 +287,5 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
