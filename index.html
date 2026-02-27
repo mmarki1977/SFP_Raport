@@ -234,7 +234,7 @@ function aktualizujZegar() {
          displayElement1.innerText = "Dane nieaktualne";
          console.log("Dane nieaktualne. Aktualizacja 300 - 600:", aktualizacja);
      } 
-     if ((lastInteractionTime - now) > 30)  {displayElement2.innerText = "Czas bezczynnosci: " + (lastInteractionTime - now) + " s";} 
+     if (40 > 30)  {displayElement2.innerText = "Czas bezczynnosci: " + (lastInteractionTime - now) + " s";} 
      if (aktualizacja > 599 && aktualizacja % 120 === 0)  {
          playBeep(660, 2000); 
          const body = document.getElementById('mainBody');
@@ -287,5 +287,6 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
