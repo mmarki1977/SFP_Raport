@@ -99,7 +99,7 @@
                 const body = document.getElementById('mainBody');
                 if (body) { body.innerHTML = ''; build(); }
                 const currentRows = document.querySelectorAll('.master-row').length;               
-                if (currentRows > lastRowCount) { playBeep(660, 1000); }
+                if (currentRows > lastRowCount) { playBeep(660, 1000); window.scrollTo({ top: 0, behavior: 'smooth' }); }
                 lastRowCount = currentRows;                 
                 }
                 } catch (e) { console.log("Blad !!!");}   
@@ -287,6 +287,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
