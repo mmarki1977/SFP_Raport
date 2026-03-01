@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitor Energii i Mediów</title>
+    <script src="chart_library.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f1f5f9; margin: 0; padding: 20px; }
+        .dashboard { max-width: 1100px; margin: 0 auto; }
+        .controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        button { 
+            padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;
+            background: #334155; color: white; transition: 0.3s;
+        }
+        button.active { background: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .chart-box { background: #1e293b; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .info-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .info-card { background: #1e293b; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 3px solid #3b82f6; }
+        .info-card span { display: block; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; }
+        .info-card strong { font-size: 1.4rem; color: #3b82f6; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="info-bar">
+        <div class="info-card"><span>⚡ Energia</span><strong id="val-el">--</strong> kWh</div>
+        <div class="info-card" style="border-color: #ef4444;"><span>🔥 Ciepło</span><strong id="val-h">--</strong> GJ</div>
+        <div class="info-card" style="border-color: #fbbf24;"><span>💨 Gaz</span><strong id="val-g">--</strong> m³</div>
+    </div>
+
+    <div class="controls">
+        <button onclick="changeView('day', this)" class="active">Dzień (24h)</button>
+        <button onclick="changeView('month', this)">Miesiąc (30 dni)</button>
+        <button onclick="changeView('year', this)">Rok (12 m-cy)</button>
+    </div>
+
+    <div class="chart-box">
+        <canvas id="energyChart" height="400"></canvas>
+    </div>
+</div>
+
+<script>
+    let myChart;
+    const ctx = document.getElementById('energyChart').getContext('2d');
+
+    // Funkcja generująca losowe dane
+    function generateData(count, min, max) {
+        return Array.from({length: count}, () => (Math.random() * (max - min) + min).toFixed(1));
+    }
+
+    const views = {
+        day: {
+            labels: Array.from({length: 24}, (_, i) => i + ':00'),
+            el: generateData(24, 2, 8),
+            heat: generateData(24, 1, 4),
+            gas: generateData(24, 0.5, 2)
+        },
+        month: {
+            labels: Array.from({length: 30}, (_, i) => (i + 1) + '.03'),
+            el: generateData(30, 40, 100),
+            heat: generateData(30, 20, 60),
+            gas: generateData(30, 10, 30)
+        },
+        year: {
+            labels: ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'],
+            el: generateData(12, 1500, 3000),
+            heat: [90, 85, 60, 30, 10, 5, 5, 8, 25, 55, 75, 95], // Realny trend ciepła
+            gas: generateData(12, 200, 500)
+        }
+    };
+
+    function initChart(viewType) {
+        const data = views[viewType];
+        
+        // Sumowanie dla kafelków
+        document.getElementById('val-el').innerText = Math.round(data.el.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)).toLocaleString();
+        document.getElementById('val-h').innerText = Math.round(data.heat.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)).toLocaleString();
+        document.getElementById('val-g').innerText = Math.round(data.gas.reduce((a, b) => parseFloat(a) + parseFloat(b), 0)).toLocaleString();
+
+        if (myChart) myChart.destroy();
+
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    { label: 'Energia (kWh)', data: data.el, borderColor: '#3b82f6', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 },
+                    { label: 'Ciepło (GJ)', data: data.heat, borderColor: '#ef4444', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 },
+                    { label: 'Gaz (m³)', data: data.gas, borderColor: '#fbbf24', backgroundColor: 'transparent', tension: 0.3, pointRadius: 2 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { position: 'top', labels: { color: '#f1f5f9', font: { size: 12 } } }
+                }
+            }
+        });
+    }
+
+    function changeView(type, btn) {
+        document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        initChart(type);
+    }
+
+    // Start aplikacji
+    initChart('day');
+</script>
+
+</body>
+</html>
