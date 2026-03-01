@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Potężny Dashboard Wizualizacji</title>
+    <!-- Tu wpisz nazwę swojego pobranego pliku -->
+    <script src="chart_library.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: white; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; }
+        .card { background: #16213e; border-radius: 15px; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 1px solid #0f3460; }
+        h2 { text-align: center; color: #4db8ff; text-transform: uppercase; letter-spacing: 2px; }
+        h3 { color: #888; font-size: 0.9em; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Zaawansowane Typy Prezentacji Danych</h2>
+
+    <div class="grid">
+        <!-- 1. WYKRES PIERŚCIENIOWY (DOUGHNUT) -->
+        <div class="card">
+            <h3>Wykres Pierścieniowy (Donut) - alternatywa dla tortu</h3>
+            <canvas id="donutChart"></canvas>
+        </div>
+
+        <!-- 2. WYKRES POLARNY (POLAR AREA) -->
+        <div class="card">
+            <h3>Wykres Polarny - efektowne porównanie skali</h3>
+            <canvas id="polarChart"></canvas>
+        </div>
+
+        <!-- 3. WYKRES MIESZANY (BAR + LINE) -->
+        <div class="card">
+            <h3>Wykres Mieszany - trend na tle słupków</h3>
+            <canvas id="mixedChart"></canvas>
+        </div>
+
+        <!-- 4. WYKRES BĄBELKOWY (BUBBLE) -->
+        <div class="card">
+            <h3>Wykres Bąbelkowy - 3 wymiary danych (X, Y oraz Wielkość)</h3>
+            <canvas id="bubbleChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const colors = ['#e94560', '#0f3460', '#533483', '#4db8ff', '#22bb33'];
+
+        // --- DONUT (Pączek) ---
+        new Chart(document.getElementById('donutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Energia', 'Transport', 'Żywność', 'Usługi'],
+                datasets: [{ data: [30, 20, 25, 25], backgroundColor: colors, borderWidth: 0, cutout: '70%' }]
+            }
+        });
+
+        // --- POLAR AREA ---
+        new Chart(document.getElementById('polarChart'), {
+            type: 'polarArea',
+            data: {
+                labels: ['A', 'B', 'C', 'D', 'E'],
+                datasets: [{ data: [11, 16, 7, 14, 12], backgroundColor: colors, opacity: 0.8 }]
+            }
+        });
+
+        // --- MIXED (Mieszany) ---
+        new Chart(document.getElementById('mixedChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'Sprzedaż',
+                    data: [400, 550, 450, 700],
+                    backgroundColor: '#4db8ff',
+                    order: 2
+                }, {
+                    label: 'Trend wzrostu',
+                    data: [380, 500, 550, 680],
+                    borderColor: '#e94560',
+                    type: 'line',
+                    order: 1,
+                    fill: false
+                }]
+            }
+        });
+
+        // --- BUBBLE (Bąbelkowy) ---
+        new Chart(document.getElementById('bubbleChart'), {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: 'Projekty IT',
+                    data: [
+                        {x: 20, y: 30, r: 15}, {x: 40, y: 10, r: 10},
+                        {x: 35, y: 45, r: 25}, {x: 10, y: 40, r: 8}
+                    ],
+                    backgroundColor: '#22bb33'
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

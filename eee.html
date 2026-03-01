@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Business Intelligence Dashboard</title>
+    <script src="chart_library.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --accent: #38bdf8;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
+        
+        /* Nagłówek i statystyki */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 12px; border-left: 5px solid var(--accent); }
+        .stat-card h4 { margin: 0; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; }
+        .stat-card .value { font-size: 1.8rem; font-weight: bold; margin: 10px 0; }
+        .stat-card .change { color: #22c55e; font-size: 0.9rem; }
+
+        /* Układ wykresów */
+        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .chart-container { background: var(--card-bg); padding: 20px; border-radius: 12px; height: 350px; }
+        
+        @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Panel Sprzedaży 2024</h1>
+        <button onclick="updateData()" style="padding: 10px; cursor: pointer; border-radius: 5px; background: var(--accent); border: none;">Odśwież dane</button>
+    </div>
+
+    <!-- Kafelki z liczbami -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h4>Przychód Całkowity</h4>
+            <div class="value">124 500 PLN</div>
+            <div class="change">▲ 12% vs m-c poprzedni</div>
+        </div>
+        <div class="stat-card">
+            <h4>Aktywni Klienci</h4>
+            <div class="value">1 205</div>
+            <div class="change">▲ 5% wzmożony ruch</div>
+        </div>
+        <div class="stat-card" style="border-left-color: #fbbf24;">
+            <h4>Konwersja</h4>
+            <div class="value">3.42 %</div>
+            <div class="change" style="color: #ef4444;">▼ 0.5% spadek</div>
+        </div>
+    </div>
+
+    <!-- Główne wykresy -->
+    <div class="charts-grid">
+        <div class="chart-container">
+            <canvas id="mainTrend"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="categoryShare"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Konfiguracja kolorów
+        const blue = '#38bdf8';
+        const purple = '#818cf8';
+
+        // 1. Wykres liniowy (Trend)
+        const ctx1 = document.getElementById('mainTrend').getContext('2d');
+        const trendChart = new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze'],
+                datasets: [{
+                    label: 'Przychody (tys. PLN)',
+                    data: [12, 19, 15, 25, 22, 30],
+                    borderColor: blue,
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: 'white' } } },
+                scales: { y: { ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#94a3b8' } } }
+            }
+        });
+
+        // 2. Wykres kołowy (Kategorie)
+        const ctx2 = document.getElementById('categoryShare').getContext('2d');
+        const pieChart = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Elektronika', 'Moda', 'Dom'],
+                datasets: [{
+                    data: [55, 25, 20],
+                    backgroundColor: [blue, purple, '#34d399'],
+                    borderWidth: 0
+                }]
+            },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { color: 'white' } } }
+            }
+        });
+
+        // Funkcja symulująca odświeżanie danych
+        function updateData() {
+            trendChart.data.datasets[0].data = trendChart.data.datasets[0].data.map(() => Math.floor(Math.random() * 40));
+            trendChart.update();
+        }
+    </script>
+</body>
+</html>
