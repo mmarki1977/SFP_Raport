@@ -94,7 +94,7 @@
             lastModified = new Date(response.headers.get('Last-Modified')).getTime();
             const aktualizacja = parseInt((now - lastModified)/1000);           
             // Sprawdź czy treść się zmieniła i nie jest pusta       
-             if (fetchedText && fetchedText !== rawData && aktualizacja < 600 ) {          
+             if (fetchedText && fetchedText !== rawData && aktualizacja < 600000 ) {          
                 rawData = fetchedText;                 
                 const body = document.getElementById('mainBody');
                 if (body) { body.innerHTML = ''; build(); }
@@ -287,6 +287,7 @@ function aktualizujZegar() {
 </script>
 </body>
 </html>
+
 
 
 
