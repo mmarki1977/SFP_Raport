@@ -49,20 +49,30 @@
             const ctx = document.getElementById('weatherChart').getContext('2d');
             myChart = new Chart(ctx, {
                 type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Temp (°C)',
-                        data: tempData,
-                        borderColor: '#ff3366',
-                        yAxisID: 'y'
-                    }, {
-                        label: 'Ciśnienie (hPa)',
-                        data: pressData,
-                        borderColor: '#3399ff',
-                        yAxisID: 'y1'
-                    }]
-                },
+     data: {
+    labels: labels,
+    datasets: [{
+        label: 'Temperatura (°C)',
+        data: tempData,
+        borderColor: '#ff3366',
+        backgroundColor: 'rgba(255, 51, 102, 0.1)',
+        borderWidth: 2,
+        pointRadius: 0,           // Usuwa kółka
+        pointHoverRadius: 5,      // Kółko tylko po najechaniu
+        tension: 0.4,             // Wygładza linię (robi fale zamiast schodków)
+        fill: true,               // Wypełnienie pod linią
+        yAxisID: 'y'
+    }, {
+        label: 'Ciśnienie (hPa)',
+        data: pressData,
+        borderColor: '#3399ff',
+        borderWidth: 2,
+        pointRadius: 0,           // Usuwa kółka dla ciśnienia
+        tension: 0.3,             // Wygładza linię ciśnienia
+        yAxisID: 'y1'
+    }]
+},
+
                 options: {
                     scales: {
                         y: { type: 'linear', position: 'left' },
@@ -77,5 +87,6 @@
     </script>
 </body>
 </html>
+
 
 
