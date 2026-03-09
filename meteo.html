@@ -22,7 +22,7 @@
         let myChart;
 
         async function init() {
-            const res = await fetch('/history');
+            const res = await fetch('/history.csv');
             const csv = await res.text();
             const rows = csv.trim().split('\n');
 
@@ -77,3 +77,4 @@
     </script>
 </body>
 </html>
+
