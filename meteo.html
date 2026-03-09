@@ -1,92 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>ESP32-S2 Weather</title>
+    <title>Stacja Pogodowa ESP32-S2</title>
     <script src="chart_library.js"></script>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
-        .container { width: 90%; max-width: 800px; margin: auto; }
-        canvas { background: #1e1e1e; border-radius: 8px; margin-top: 20px; }
-        #trend { font-size: 1.2em; color: #00ff88; margin: 15px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .station { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 2px solid #333; width: 350px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .block { margin-bottom: 30px; }
+        .label { font-size: 0.9em; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+        .value { font-size: 3.5em; font-weight: bold; margin: 5px 0; font-variant-numeric: tabular-nums; }
+        .unit { font-size: 0.4em; color: #555; margin-left: 5px; }
+        .trend { font-size: 1.5em; font-weight: bold; }
+        .up { color: #ff3366; }    /* Czerwony dla wzrostu temp / Zielony dla ciśnienia */
+        .down { color: #3399ff; }  /* Niebieski dla spadku */
+        .stable { color: #888; }
+        hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Stacja ESP32-S2</h1>
-        <div id="trend">Ładowanie trendu...</div>
-        <canvas id="weatherChart"></canvas>
+
+<div class="station">
+    <div class="block">
+        <div class="label">Temperatura</div>
+        <div id="temp" class="value">--<span class="unit">°C</span></div>
+        <div id="temp-trend" class="trend stable">--</div>
     </div>
+    
+    <hr>
 
-    <script>
-        let myChart;
+    <div class="block">
+        <div class="label">Ciśnienie</div>
+        <div id="press" class="value">----<span class="unit">hPa</span></div>
+        <div id="press-trend" class="trend stable">--</div>
+    </div>
+</div>
 
-        async function init() {
-            const res = await fetch('history.csv');
-            const csv = await res.text();
-            const rows = csv.trim().split('\n');
+<script>
+async function updateStation() {
+    try {
+        const res = await fetch('history.csv');
+        const text = await res.text();
+        const rows = text.trim().split('\n');
+        if (rows.length < 2) return;
 
-            const labels = [];
-            const tempData = [];
-            const pressData = [];
+        const data = rows.map(r => r.split(','));
+        const last = data[data.length - 1];
+        
+        // --- TEMPERATURA ---
+        const currentTemp = parseFloat(last[1]);
+        document.getElementById('temp').innerHTML = `${currentTemp.toFixed(1)}<span class="unit">°C</span>`;
+        
+        // Trend Temp (porównanie z odczytem sprzed 1h = 4 wpisy)
+        const prevTemp = parseFloat(data[Math.max(0, data.length - 5)][1]);
+        setTrend('temp-trend', currentTemp - prevTemp, 0.2);
 
-            rows.forEach(row => {
-                const [ts, temp, press] = row.split(',');
-                const date = new Date(parseInt(ts) * 1000);
-                // Format: "PN 12:30"
-                labels.push(date.toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'}));
-                tempData.push(parseFloat(temp));
-                pressData.push(parseFloat(press));
-            });
+        // --- CIŚNIENIE ---
+        const currentPress = parseFloat(last[2]);
+        document.getElementById('press').innerHTML = `${Math.round(currentPress)}<span class="unit">hPa</span>`;
+        
+        // Trend Ciśnienia (porównanie z odczytem sprzed 3h = 12 wpisów)
+        const prevPress = parseFloat(data[Math.max(0, data.length - 13)][2]);
+        setTrend('press-trend', currentPress - prevPress, 0.5);
 
-            // Oblicz trend (ostatnie 12 wpisów = 3h)
-            if (pressData.length >= 12) {
-                const diff = (pressData[pressData.length-1] - pressData[pressData.length-12]).toFixed(1);
-                const icon = diff > 0.3 ? "↗️ Wzrost" : (diff < -0.3 ? "↘️ Spadek" : "➡️ Stabilne");
-                document.getElementById('trend').innerText = `Trend (3h): ${icon} (${diff} hPa)`;
-            }
+    } catch (e) { console.error("Błąd danych", e); }
+}
 
-            const ctx = document.getElementById('weatherChart').getContext('2d');
-            myChart = new Chart(ctx, {
-                type: 'line',
-     data: {
-    labels: labels,
-    datasets: [{
-        label: 'Temperatura (°C)',
-        data: tempData,
-        borderColor: '#ff3366',
-        backgroundColor: 'rgba(255, 51, 102, 0.1)',
-        borderWidth: 2,
-        pointRadius: 0,           // Usuwa kółka
-        pointHoverRadius: 5,      // Kółko tylko po najechaniu
-        tension: 0.4,             // Wygładza linię (robi fale zamiast schodków)
-        fill: true,               // Wypełnienie pod linią
-        yAxisID: 'y'
-    }, {
-        label: 'Ciśnienie (hPa)',
-        data: pressData,
-        borderColor: '#3399ff',
-        borderWidth: 2,
-        pointRadius: 0,           // Usuwa kółka dla ciśnienia
-        tension: 0.3,             // Wygładza linię ciśnienia
-        yAxisID: 'y1'
-    }]
-},
+function setTrend(id, diff, threshold) {
+    const el = document.getElementById(id);
+    if (diff > threshold) {
+        el.innerHTML = "▲ ROSNIE";
+        el.className = "trend up";
+    } else if (diff < -threshold) {
+        el.innerHTML = "▼ SPADA";
+        el.className = "trend down";
+    } else {
+        el.innerHTML = "━ STABILNE";
+        el.className = "trend stable";
+    }
+}
 
-                options: {
-                    scales: {
-                        y: { type: 'linear', position: 'left' },
-                        y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false } }
-                    },
-                    plugins: { legend: { labels: { color: 'white' } } }
-                }
-            });
-        }
+updateStation();
+setInterval(updateStation, 30000); // Odświeżaj co 30 sek.
+</script>
 
-        init();
-    </script>
 </body>
 </html>
-
-
-
