@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ESP32-S2 Weather</title>
+    <script src="chart_library.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
+        .container { width: 90%; max-width: 800px; margin: auto; }
+        canvas { background: #1e1e1e; border-radius: 8px; margin-top: 20px; }
+        #trend { font-size: 1.2em; color: #00ff88; margin: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stacja ESP32-S2</h1>
+        <div id="trend">Ładowanie trendu...</div>
+        <canvas id="weatherChart"></canvas>
+    </div>
+
+    <script>
+        let myChart;
+
+        async function init() {
+            const res = await fetch('/history');
+            const csv = await res.text();
+            const rows = csv.trim().split('\n');
+
+            const labels = [];
+            const tempData = [];
+            const pressData = [];
+
+            rows.forEach(row => {
+                const [ts, temp, press] = row.split(',');
+                const date = new Date(parseInt(ts) * 1000);
+                // Format: "PN 12:30"
+                labels.push(date.toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'}));
+                tempData.push(parseFloat(temp));
+                pressData.push(parseFloat(press));
+            });
+
+            // Oblicz trend (ostatnie 12 wpisów = 3h)
+            if (pressData.length >= 12) {
+                const diff = (pressData[pressData.length-1] - pressData[pressData.length-12]).toFixed(1);
+                const icon = diff > 0.3 ? "↗️ Wzrost" : (diff < -0.3 ? "↘️ Spadek" : "➡️ Stabilne");
+                document.getElementById('trend').innerText = `Trend (3h): ${icon} (${diff} hPa)`;
+            }
+
+            const ctx = document.getElementById('weatherChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Temp (°C)',
+                        data: tempData,
+                        borderColor: '#ff3366',
+                        yAxisID: 'y'
+                    }, {
+                        label: 'Ciśnienie (hPa)',
+                        data: pressData,
+                        borderColor: '#3399ff',
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { type: 'linear', position: 'left' },
+                        y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false } }
+                    },
+                    plugins: { legend: { labels: { color: 'white' } } }
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
